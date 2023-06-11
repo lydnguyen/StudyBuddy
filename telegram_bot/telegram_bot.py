@@ -1,15 +1,11 @@
 import time
-import datetime
-
 import pyfiglet
 import logging
 import logging.config
 import os
-
 from dotenv import load_dotenv, find_dotenv
-
-load_dotenv(find_dotenv())
-
+import telegram
+from _model import *
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Poll
 from telegram.ext import (
     Updater,
@@ -19,9 +15,8 @@ from telegram.ext import (
     CallbackQueryHandler,
     PollHandler,
 )
-import telegram
 
-from _model import *
+load_dotenv(find_dotenv())
 
 
 def get_chat_id(update, context):
@@ -80,7 +75,6 @@ def help_command_handler(update, context):
 def new_member(update, context):
     logging.info(f"new_member : {update}")
 
-
     add_typing(update, context)
     add_text_message(update, context, f"New user")
 
@@ -95,7 +89,6 @@ def main_handler(update, context):
         # reply
         add_typing(update, context)
         add_text_message(update, context, f"You said: {user_input}")
-
 
         # ban member
         # m = context.bot.kick_chat_member(
@@ -229,7 +222,6 @@ def main():
 
     # message handler
     dp.add_handler(MessageHandler(Filters.text, main_handler))
-
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, new_member))
 
     # suggested_actions_handler
@@ -278,7 +270,7 @@ class DefaultConfig:
 
 
 if __name__ == "__main__":
-    ascii_banner = pyfiglet.figlet_format("SampleTelegramQuiz")
+    ascii_banner = pyfiglet.figlet_format("Study Buddy Quiz")
     print(ascii_banner)
 
     # Enable logging

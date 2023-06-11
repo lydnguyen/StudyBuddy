@@ -21,10 +21,15 @@ Clone the repository
 git clone https://github.com/gcatanese/SampleTelegramQuiz.git
 ```
 
-Create and *.env* file in the same folder as *app.py*. The *.env* file defines the environment variables.  
-
-* TELEGRAM_TOKEN={your Telegram token} [here]
-
+Create and *.env* file in the same folder as *app.py*. 
+Install the packages in requirement.txt
+```
+pip install -r requirements.txt
+```
+The *.env* file defines the environment variables. To set environment variable via windows commandline:
+```
+set TELEGRAM_TOKEN={your Telegram token}
+```
 
 ## Run on Local
 Run the application

@@ -1,0 +1,45 @@
+<mxfile host="app.diagrams.net" modified="2023-06-11T20:22:29.550Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="77kZkIqIDiWGW6Zgk-9s" version="21.3.5" type="device">
+  <diagram name="Page-1" id="y8u6iq1gdYFjF0iKgaDD">
+    <mxGraphModel dx="1884" dy="759" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Yqe0eiKjLAsBn1vykgOo-1" value="main()" style="ellipse;html=1;shape=startState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="1">
+          <mxGeometry x="40" y="300" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Yqe0eiKjLAsBn1vykgOo-2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;" edge="1" source="Yqe0eiKjLAsBn1vykgOo-1" parent="1" target="Yqe0eiKjLAsBn1vykgOo-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="180" y="315" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Yqe0eiKjLAsBn1vykgOo-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Yqe0eiKjLAsBn1vykgOo-3" target="Yqe0eiKjLAsBn1vykgOo-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Yqe0eiKjLAsBn1vykgOo-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Yqe0eiKjLAsBn1vykgOo-3" target="Yqe0eiKjLAsBn1vykgOo-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Yqe0eiKjLAsBn1vykgOo-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Yqe0eiKjLAsBn1vykgOo-3" target="Yqe0eiKjLAsBn1vykgOo-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Yqe0eiKjLAsBn1vykgOo-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Yqe0eiKjLAsBn1vykgOo-3" target="Yqe0eiKjLAsBn1vykgOo-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Yqe0eiKjLAsBn1vykgOo-3" value="Setup handles" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="400" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Yqe0eiKjLAsBn1vykgOo-4" value="command handlers" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-180" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Yqe0eiKjLAsBn1vykgOo-5" value="message handlers" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-10" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Yqe0eiKjLAsBn1vykgOo-6" value="suggestion_actions handler" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Yqe0eiKjLAsBn1vykgOo-7" value="answer handler" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
