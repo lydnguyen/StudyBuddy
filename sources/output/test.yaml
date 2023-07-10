@@ -1,0 +1,41 @@
+1:
+  question: "Which European country eats the most chocolate per capita?"
+  answers: ["Netherland", "France", "Sweden"]
+  correct_answer_position: 1
+2:
+  question: "What tastes better?"
+  answers: ["water", "ice", "wine"]
+  correct_answer_position: 2
+3:
+  question: "Out of the following, which is the best way to eat healthier?"
+  answers: ["Vegan diet", "Protein-rich food", "Balanced diet", "Only fresh fruits"]
+  correct_answer_position: 2
+4:
+  question: "Which factors are part of the Big 5 personality factors?"
+  answers: ["Surgency", "Conscientiousness", "Agreeableness", "All of the above"]
+  correct_answer_position: 3
+5:
+  question: "Which Disney Princess comes from China"
+  answers: ["Aurora", "Mulan", "Belle", "Ariel"]
+  correct_answer_position: 1
+6:
+  question: "Which animal is the biggest?"
+  answers: ["cat", "dog", "elephan", "whale"]
+  correct_answer_position: 3
+7:
+  question: "Which one is heavier?"
+  answers: ["1KG of cotton", "1KG of sand", "Both weight the same!"]
+  correct_answer_position: 2
+8:
+  question: "Which colors can dog see?"
+  answers: ["Yellow + Red", "Purple + Green", "Blue + Orange", "All of the above"]
+  correct_answer_position: 0
+9:
+  question: "Which date is Dutch King's day?"
+  answers: ["13th April", "30th April", "27th April", "1 April"]
+  correct_answer_position: 2
+10:
+  question: "Which animal is NOT in the 12 Zodiac?"
+  answers: ["Fish", "Cat", "Horse", "Snake"]
+  correct_answer_position: 0
+

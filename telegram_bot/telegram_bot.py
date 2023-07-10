@@ -1,4 +1,6 @@
 import time
+import yaml
+import random
 import pyfiglet
 import logging
 import logging.config
@@ -58,13 +60,28 @@ def start_command_handler(update, context):
     """Send a message when the command /start is issued."""
     add_typing(update, context)
 
+    question = questionaire_generator()
+    question_content = question['question']
+    answer = question['answers']
+    correct_answer_pos = question['correct_answer_position']
+    correct_answer = answer[correct_answer_pos]
+
     quiz_question = QuizQuestion()
-    quiz_question.question = "What tastes better?"
-    quiz_question.answers = ["water", "ice", "wine"]
-    quiz_question.correct_answer_position = 2
-    quiz_question.correct_answer = "wine"
+    quiz_question.question = question_content
+    quiz_question.answers = answer
+    quiz_question.correct_answer_position = correct_answer_pos
+    quiz_question.correct_answer = correct_answer
 
     add_quiz_question(update, context, quiz_question)
+
+
+def questionaire_generator():
+    path = os.path.abspath(os.path.join(os.getcwd(), "sources", "output", "test.yaml"))
+    with open(path) as f:
+        questions = yaml.safe_load(f)
+    question_id = random.choice(list(questions.keys()))
+    logging.info(f'Question ID: {question_id}')
+    return questions[question_id]
 
 
 def help_command_handler(update, context):
@@ -102,15 +119,17 @@ def main_handler(update, context):
 def poll_handler(update, context):
     logging.info(f"question : {update.poll.question}")
     logging.info(f"correct option : {update.poll.correct_option_id}")
-    logging.info(f"option #1 : {update.poll.options[0]}")
-    logging.info(f"option #2 : {update.poll.options[1]}")
-    logging.info(f"option #3 : {update.poll.options[2]}")
+    amount_options = range(len(update.poll.options))
+    for i in amount_options:
+        option = i+1
+        logging.info(f"option #{option} : {update.poll.options[i]}")
 
-    user_answer = get_answer(update)
-    logging.info(f"correct option {is_answer_correct(update)}")
+    # user_answer = get_answer(update)
+    correct_answer = update.poll.options[update.poll.correct_option_id]['text']
+    logging.info(f"Input choice is {is_answer_correct(update)}")
 
     add_typing(update, context)
-    add_text_message(update, context, f"Correct answer is {user_answer}")
+    add_text_message(update, context, f"Correct answer is {correct_answer}")
 
 
 def add_typing(update, context):
@@ -218,7 +237,7 @@ def main():
 
     # command handlers
     dp.add_handler(CommandHandler("help", help_command_handler))
-    dp.add_handler(CommandHandler("start", start_command_handler))
+    dp.add_handler(CommandHandler("s", start_command_handler))
 
     # message handler
     dp.add_handler(MessageHandler(Filters.text, main_handler))
