@@ -38,4 +38,9 @@
   question: "Which animal is NOT in the 12 Zodiac?"
   answers: ["Fish", "Cat", "Horse", "Snake"]
   correct_answer_position: 0
+11:
+  question: "You are developing a mobile application that makes requests to a server in order to retrieve data. The data is retrieved from a DynamoDB table. 
+            Which of the following would be the best way to secure the data in transit between the mobile application and the server?"
+  answers: ["TLS - Transport Layer Security", "SSL - Secured Socket Layer", "IPsec - Internet Protocol Security"]
+  correct_answer_position: 0
 
