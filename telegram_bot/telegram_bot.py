@@ -286,6 +286,7 @@ def main():
 class DefaultConfig:
     config_path = os.path.abspath(os.path.join(os.getcwd(), "configurations.yaml"))
     logger.info(f'Config path is {config_path}')
+    logger.info(f'CWDirectory is {os.getcwd()}')
     with open(config_path) as f:
         config = yaml.safe_load(f)
         TELEGRAM_TOKEN = config['telegram_token']
