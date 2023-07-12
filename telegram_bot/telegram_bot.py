@@ -4,6 +4,7 @@ import random
 import pyfiglet
 import logging
 import logging.config
+import sys
 import os
 from dotenv import load_dotenv, find_dotenv
 import telegram
@@ -19,6 +20,16 @@ from telegram.ext import (
 )
 
 load_dotenv(find_dotenv())
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# this is just to make the output look nice
+formatter = logging.Formatter(fmt="%(asctime)s %(name)s.%(levelname)s: %(message)s", datefmt="%Y.%m.%d %H:%M:%S")
+
+# this logs to stdout and I think it is flushed immediately
+handler = logging.StreamHandler(stream=sys.stdout)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 
 def get_chat_id(update, context):
@@ -274,6 +285,7 @@ def main():
 
 class DefaultConfig:
     config_path = os.path.abspath(os.path.join(os.getcwd(), "configurations.yaml"))
+    logger.info(f'Config path is {config_path}')
     with open(config_path) as f:
         config = yaml.safe_load(f)
         TELEGRAM_TOKEN = config['telegram_token']
