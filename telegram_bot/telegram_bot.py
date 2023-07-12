@@ -273,8 +273,12 @@ def main():
 
 
 class DefaultConfig:
+    config_path = os.path.abspath(os.path.join(os.getcwd(), "configurations.yaml"))
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+        TELEGRAM_TOKEN = config['telegram_token']
     PORT = int(os.environ.get("PORT", 3978))
-    TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
+    # TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
     MODE = os.environ.get("MODE", "polling")
     WEBHOOK_URL = os.environ.get("WEBHOOK_URL", "")
 
