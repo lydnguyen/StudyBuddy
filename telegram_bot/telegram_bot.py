@@ -62,7 +62,7 @@ def start_command_handler(update, context):
 
     question = questionaire_generator()
     question_content = question['question']
-    answer = question['answers']
+    answer = question['options']
     correct_answer_pos = question['correct_answer_position']
     correct_answer = answer[correct_answer_pos]
 
@@ -76,7 +76,7 @@ def start_command_handler(update, context):
 
 
 def questionaire_generator():
-    path = os.path.abspath(os.path.join(os.getcwd(), "sources", "output", "test.yaml"))
+    path = os.path.abspath(os.path.join(os.getcwd(), "sources", "output", "aws_questions_8.yaml"))
     with open(path) as f:
         questions = yaml.safe_load(f)
     question_id = random.choice(list(questions.keys()))
@@ -129,7 +129,7 @@ def poll_handler(update, context):
     logging.info(f"Input choice is {is_answer_correct(update)}")
 
     add_typing(update, context)
-    add_text_message(update, context, f"Correct answer is {correct_answer}")
+    add_text_message(update, context, f"The correct answer is {correct_answer}")
 
 
 def add_typing(update, context):
@@ -169,7 +169,7 @@ def add_quiz_question(update, context, quiz_question):
         correct_option_id=quiz_question.correct_answer_position,
         open_period=5,
         is_anonymous=True,
-        explanation="Well, honestly that depends on what you eat",
+        # explanation="Well, honestly that depends on what you eat",
         explanation_parse_mode=telegram.ParseMode.MARKDOWN_V2,
     )
 
