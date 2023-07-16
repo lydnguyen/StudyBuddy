@@ -9,6 +9,7 @@ import os
 from dotenv import load_dotenv, find_dotenv
 import telegram
 from _model import *
+from _authentications import Authenticate
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Poll
 from telegram.ext import (
     Updater,
@@ -284,14 +285,9 @@ def main():
 
 
 class DefaultConfig:
-    config_path = os.path.abspath(os.path.join(os.getcwd(), "configurations.yaml"))
-    logger.info(f'Config path is {config_path}')
-    logger.info(f'CWDirectory is {os.getcwd()}')
-    with open(config_path) as f:
-        config = yaml.safe_load(f)
-        TELEGRAM_TOKEN = config['telegram_token']
+    # config_path = os.path.abspath(os.path.join(os.getcwd(), "configurations.yaml"))
+    TELEGRAM_TOKEN = Authenticate().get_secret()['telegram_token']
     PORT = int(os.environ.get("PORT", 3978))
-    # TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
     MODE = os.environ.get("MODE", "polling")
     WEBHOOK_URL = os.environ.get("WEBHOOK_URL", "")
 
