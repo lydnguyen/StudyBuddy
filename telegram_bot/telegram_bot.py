@@ -10,6 +10,7 @@ from dotenv import load_dotenv, find_dotenv
 import telegram
 from _model import *
 from _authentications import Authenticate
+from _access_source import ListQuestionaire
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Poll
 from telegram.ext import (
     Updater,
@@ -88,9 +89,7 @@ def start_command_handler(update, context):
 
 
 def questionaire_generator():
-    path = os.path.abspath(os.path.join(os.getcwd(), "sources", "output", "aws_questions_8.yaml"))
-    with open(path) as f:
-        questions = yaml.safe_load(f)
+    questions = ListQuestionaire().get_all_questions_available()
     question_id = random.choice(list(questions.keys()))
     logging.info(f'Question ID: {question_id}')
     return questions[question_id]
@@ -285,7 +284,6 @@ def main():
 
 
 class DefaultConfig:
-    # config_path = os.path.abspath(os.path.join(os.getcwd(), "configurations.yaml"))
     TELEGRAM_TOKEN = Authenticate().get_secret()['telegram_token']
     PORT = int(os.environ.get("PORT", 3978))
     MODE = os.environ.get("MODE", "polling")

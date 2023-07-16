@@ -6,5 +6,4 @@ __pycache__
 .env
 
 
-/configurations.yaml
 /studdybuddy_keypair.pem
