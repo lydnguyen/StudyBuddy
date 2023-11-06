@@ -178,7 +178,7 @@ def add_quiz_question(update, context, quiz_question):
         options=quiz_question.answers,
         type=Poll.QUIZ,
         correct_option_id=quiz_question.correct_answer_position,
-        open_period=15,
+        # open_period=15,
         is_anonymous=False,
         # explanation="Well, honestly that depends on what you eat",
         explanation_parse_mode=telegram.ParseMode.MARKDOWN_V2,
