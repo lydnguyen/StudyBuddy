@@ -15,7 +15,6 @@ class ListQuestionaire:
         unique_id_question = 0
         for i in all_input_files['Contents']:
             if re.match('input_v1/\S+.yaml', i['Key']):
-            # if re.match('input/\S+.yaml', i['Key']):
                 response = self.s3_client.get_object(Bucket=self.bucket, Key=i['Key'])
                 questionaire = yaml.safe_load(response["Body"])
                 for key, value in questionaire.items():
