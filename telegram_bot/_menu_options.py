@@ -3,12 +3,12 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 ############################### Bot ############################################
-async def switch_topic(update):
+async def switch_topic(update, context):
     await update.message.reply_text(await main_menu_message(),
                                     reply_markup=await main_menu_keyboard())
 
 
-async def main_menu(update):
+async def main_menu(update, context):
     query = update.callback_query
     await query.answer()
     await query.edit_message_text(
@@ -16,7 +16,7 @@ async def main_menu(update):
         reply_markup=await main_menu_keyboard())
 
 
-async def first_menu(update):
+async def first_menu(update, context):
     query = update.callback_query
     await query.answer()
     await query.edit_message_text(
@@ -24,7 +24,7 @@ async def first_menu(update):
         reply_markup=await first_menu_keyboard())
 
 
-async def second_menu(update):
+async def second_menu(update, context):
     query = update.callback_query
     await query.answer()
     await query.edit_message_text(
@@ -32,7 +32,7 @@ async def second_menu(update):
         reply_markup=await second_menu_keyboard())
 
 
-async def third_menu(update):
+async def third_menu(update, context):
     query = update.callback_query
     await query.answer()
     await query.edit_message_text(
