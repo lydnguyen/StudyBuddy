@@ -9,6 +9,7 @@ from _access_source import ListQuestionaire
 from telegram import (
     Poll,
     Update,
+    ReplyKeyboardMarkup
 )
 from telegram.ext import (
     Application,
@@ -16,16 +17,9 @@ from telegram.ext import (
     ContextTypes,
     PollHandler,
 )
-from telegram import (
-    ReplyKeyboardMarkup
-    , KeyboardButton
-)
 
 
-def help_command_handler(update: Update):
-    """Send a message when the command /help is issued."""
-    update.message.reply_text("Type /start")
-
+# class Quiz_generator():
 
 def get_question_object():
     """Send a message when the command /start is issued."""
@@ -53,7 +47,7 @@ def questionaire_generator():
 
 async def quiz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a predefined poll"""
-    reply_keyboard = [['/help', '/start_quiz']]
+    reply_keyboard = [['/start_quiz']]
     quiz_question = get_question_object()
     message = await update.effective_message.reply_poll(
         question=quiz_question.question
@@ -118,11 +112,12 @@ class DefaultConfig:
 def main():
     # Create the Application and pass it your bot's token.
     application = Application.builder().token(DefaultConfig.TELEGRAM_TOKEN).build()
-    quiz_handler = CommandHandler('start_quiz', quiz)
-    receive_q_answer = PollHandler(DefaultConfig.TOTAL_VOTER_COUNT, receive_quiz_answer)
 
+    quiz_handler = CommandHandler('start_quiz', quiz)
     application.add_handler(quiz_handler)
-    application.add_handler(receive_q_answer)
+
+    # receive_q_answer = PollHandler(DefaultConfig.TOTAL_VOTER_COUNT, receive_quiz_answer)
+    # application.add_handler(receive_q_answer)
 
     # log all errors
     application.add_error_handler(error)
