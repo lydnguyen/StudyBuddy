@@ -4,12 +4,14 @@ import logging.config
 import os
 from _authentications import Authenticate
 import _quiz_generator as qg
+import _menu_options as mo
 from telegram import (
     Update,
 )
 from telegram.ext import (
     Application,
     CommandHandler,
+    CallbackQueryHandler
 )
 
 
@@ -39,8 +41,18 @@ class DefaultConfig:
 def main():
     # Create the Application and pass it your bot's token.
     application = Application.builder().token(DefaultConfig.TELEGRAM_TOKEN).build()
-    quiz_handler = CommandHandler('start_quiz', qg.quiz)
-    application.add_handler(quiz_handler)
+
+    application.add_handler(CommandHandler('start_quiz', qg.quiz))
+    application.add_handler(CommandHandler('switch_topic', mo.switch_topic))
+    application.add_handler(CallbackQueryHandler(mo.main_menu, pattern='main'))
+    application.add_handler(CallbackQueryHandler(mo.first_menu, pattern='m1'))
+    application.add_handler(CallbackQueryHandler(mo.second_menu, pattern='m2'))
+    application.add_handler(CallbackQueryHandler(mo.third_menu, pattern='m3'))
+
+    application.add_handler(CallbackQueryHandler(mo.first_submenu,
+                                                 pattern='m1_1'))
+    application.add_handler(CallbackQueryHandler(mo.second_submenu,
+                                                 pattern='m2_1'))
 
     # receive_q_answer = PollHandler(DefaultConfig.TOTAL_VOTER_COUNT, qg.receive_quiz_answer)
     # application.add_handler(receive_q_answer)
