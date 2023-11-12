@@ -58,15 +58,10 @@ def main():
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler('start_quiz', qg.quiz))
     application.add_handler(CommandHandler('switch_topic', mo.switch_topic))
+    application.add_handler(CallbackQueryHandler(mo.level_menu, pattern='m1'))
+    application.add_handler(CallbackQueryHandler(mo.level_menu, pattern='m2'))
+    application.add_handler(CallbackQueryHandler(mo.level_menu, pattern='m3'))
     application.add_handler(CallbackQueryHandler(mo.main_menu, pattern='main'))
-    application.add_handler(CallbackQueryHandler(mo.first_menu, pattern='m1'))
-    application.add_handler(CallbackQueryHandler(mo.second_menu, pattern='m2'))
-    application.add_handler(CallbackQueryHandler(mo.third_menu, pattern='m3'))
-
-    application.add_handler(CallbackQueryHandler(mo.first_submenu,
-                                                 pattern='m1_1'))
-    application.add_handler(CallbackQueryHandler(mo.second_submenu,
-                                                 pattern='m2_1'))
 
     # receive_q_answer = PollHandler(DefaultConfig.TOTAL_VOTER_COUNT, qg.receive_quiz_answer)
     # application.add_handler(receive_q_answer)

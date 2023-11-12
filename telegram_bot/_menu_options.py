@@ -1,10 +1,31 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-# Source: https://stackoverflow.com/questions/51125356/proper-way-to-build-menus-with-python-telegram-bot
+import os
+import logging
+
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=os.environ.get("LOG_LEVEL", "INFO").upper(),
+)
+# Original source: https://stackoverflow.com/questions/51125356/proper-way-to-build-menus-with-python-telegram-bot
+
+option_info = {
+    'AWS CAA03': {'id': 'm1'},
+    'English': {'id': 'm2'},
+    'Math': {'id': 'm3'}
+}
+
+level_info = {'message': 'Choose level of difficulty:',
+              'levels': {
+                  'm1_1': 'Beginner',
+                  'm1_2': 'Intermediate',
+                  'm1_3': 'Advanced',
+                  'main': 'Main Menu',
+              }}
 
 
-############################### Bot ############################################
+############################### Menus ############################################
 async def switch_topic(update, context):
-    await update.message.reply_text(await main_menu_message(),
+    await update.message.reply_text(text='Choose the option in main menu:',
                                     reply_markup=await main_menu_keyboard())
 
 
@@ -12,84 +33,31 @@ async def main_menu(update, context):
     query = update.callback_query
     await query.answer()
     await query.edit_message_text(
-        text=await main_menu_message(),
+        text='Choose the option in main menu:',
         reply_markup=await main_menu_keyboard())
 
 
-async def first_menu(update, context):
+async def level_menu(update, context):
     query = update.callback_query
     await query.answer()
     await query.edit_message_text(
-        text=await first_menu_message(),
-        reply_markup=await first_menu_keyboard())
-
-
-async def second_menu(update, context):
-    query = update.callback_query
-    await query.answer()
-    await query.edit_message_text(
-        text=await second_menu_message(),
-        reply_markup=await second_menu_keyboard())
-
-
-async def third_menu(update, context):
-    query = update.callback_query
-    await query.answer()
-    await query.edit_message_text(
-        text=await third_menu_message(),
-        reply_markup=await third_menu_keyboard())
-
-
-# and so on for every callback_data option
-async def first_submenu(bot, update):
-    pass
-
-
-async def second_submenu(bot, update):
-    pass
+        text=level_info['message'],
+        reply_markup=await level_menu_keyboard())
 
 
 ############################ Keyboards #########################################
 async def main_menu_keyboard():
-    keyboard = [[InlineKeyboardButton('Option 1', callback_data='m1')],
-                [InlineKeyboardButton('Option 2', callback_data='m2')],
-                [InlineKeyboardButton('Option 3', callback_data='m3')]]
+    keyboard = []
+    for option, callback_data in option_info.items():
+        button = [InlineKeyboardButton(text=option, callback_data=callback_data['id'])]
+        keyboard.append(button)
     return InlineKeyboardMarkup(keyboard)
 
 
-async def first_menu_keyboard():
-    keyboard = [[InlineKeyboardButton('Submenu 1-1', callback_data='m1_1')],
-                [InlineKeyboardButton('Submenu 1-2', callback_data='m1_2')],
-                [InlineKeyboardButton('Main menu', callback_data='main')]]
+async def level_menu_keyboard():
+    keyboard = []
+    for value, key in level_info['levels'].items():
+        button = [InlineKeyboardButton(text=key, callback_data=value)]
+        keyboard.append(button)
     return InlineKeyboardMarkup(keyboard)
 
-
-async def second_menu_keyboard():
-    keyboard = [[InlineKeyboardButton('Submenu 2-1', callback_data='m2_1')],
-                [InlineKeyboardButton('Submenu 2-2', callback_data='m2_2')],
-                [InlineKeyboardButton('Main menu', callback_data='main')]]
-    return InlineKeyboardMarkup(keyboard)
-
-
-async def third_menu_keyboard():
-    keyboard = [[InlineKeyboardButton('Submenu 3-1', callback_data='m2_1')],
-                [InlineKeyboardButton('Submenu 3-2', callback_data='m2_2')],
-                [InlineKeyboardButton('Main menu', callback_data='main')]]
-    return InlineKeyboardMarkup(keyboard)
-
-
-############################# Messages #########################################
-async def main_menu_message():
-    return 'Choose the option in main menu:'
-
-
-async def first_menu_message():
-    return 'Choose the submenu in first menu:'
-
-
-async def second_menu_message():
-    return 'Choose the submenu in second menu:'
-
-
-async def third_menu_message():
-    return 'Choose the submenu in second menu:'
