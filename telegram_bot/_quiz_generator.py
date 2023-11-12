@@ -39,7 +39,7 @@ def questionaire_generator():
 
 async def quiz(update : Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a predefined poll"""
-    reply_keyboard = [['/start_quiz']]
+    # reply_keyboard = [['/start_quiz']]
     quiz_question = get_question_object()
     message = await update.effective_message.reply_poll(
         question=quiz_question.question
@@ -48,11 +48,11 @@ async def quiz(update : Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         , correct_option_id=quiz_question.correct_answer_position
         , is_anonymous=False
         , allows_multiple_answers=True
-        , reply_markup=ReplyKeyboardMarkup(
-            reply_keyboard
-            , one_time_keyboard=False
-            , resize_keyboard=True
-        )
+        # , reply_markup=ReplyKeyboardMarkup(
+        #     reply_keyboard
+        #     , one_time_keyboard=False
+        #     , resize_keyboard=True
+        # )
     )
     # Save some info about the poll the bot_data for later use in receive_quiz_answer
     payload = {

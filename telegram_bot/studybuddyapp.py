@@ -7,6 +7,7 @@ import _quiz_generator as qg
 import _menu_options as mo
 from telegram import (
     Update,
+    ReplyKeyboardMarkup
 )
 from telegram.ext import (
     Application,
@@ -38,10 +39,23 @@ class DefaultConfig:
         )
 
 
+async def start(update, context):
+    reply_keyboard = [["/start_quiz", "/switch_topic"]]
+    keyboard = ReplyKeyboardMarkup(reply_keyboard
+                                   , one_time_keyboard=False
+                                   , resize_keyboard=True
+                                   )
+    await context.bot.send_message(chat_id=update.effective_chat.id,
+                                   text="Welcome to your own Study Buddy. \n What do you want to do?",
+                                   reply_markup=keyboard,
+                                   )
+
+
 def main():
     # Create the Application and pass it your bot's token.
     application = Application.builder().token(DefaultConfig.TELEGRAM_TOKEN).build()
 
+    application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler('start_quiz', qg.quiz))
     application.add_handler(CommandHandler('switch_topic', mo.switch_topic))
     application.add_handler(CallbackQueryHandler(mo.main_menu, pattern='main'))
