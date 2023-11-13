@@ -1,7 +1,6 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import os
 import logging
-
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
     level=os.environ.get("LOG_LEVEL", "INFO").upper(),
@@ -9,18 +8,21 @@ logging.basicConfig(
 # Original source: https://stackoverflow.com/questions/51125356/proper-way-to-build-menus-with-python-telegram-bot
 
 option_info = {
-    'AWS CAA03': {'id': 'm1'},
-    'English': {'id': 'm2'},
-    'Math': {'id': 'm3'}
+    'AWS CAA03': {'id': 'aws'},
+    'English': {'id': 'english'},
+    'Math': {'id': 'math'}
 }
 
 level_info = {'message': 'Choose level of difficulty:',
               'levels': {
-                  'm1_1': 'Beginner',
-                  'm1_2': 'Intermediate',
-                  'm1_3': 'Advanced',
+                  'beginner': 'Beginner',
+                  'intermediate': 'Intermediate',
+                  'advanced': 'Advanced',
                   'main': 'Main Menu',
               }}
+
+topic = ''
+level = ''
 
 
 ############################### Menus ############################################
@@ -43,6 +45,24 @@ async def level_menu(update, context):
     await query.edit_message_text(
         text=level_info['message'],
         reply_markup=await level_menu_keyboard())
+    global topic
+    if query.data:
+        topic = query.data
+    logging.info(f'User choose for topic: {topic}')
+
+
+async def return_options(update, context):
+    query = update.callback_query
+    await query.answer()
+
+    global level
+    if query.data:
+        level = query.data
+    logging.info(f'User choose for level: {level}')
+
+    await query.edit_message_text(
+        text=f'You are now quizing for topic {topic.upper()}, level {level.upper()}.',
+    )
 
 
 ############################ Keyboards #########################################
