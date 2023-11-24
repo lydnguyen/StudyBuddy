@@ -66,9 +66,7 @@ def main():
     application.add_handler(CallbackQueryHandler(mo.return_options, pattern='intermediate'))
     application.add_handler(CallbackQueryHandler(mo.return_options, pattern='advanced'))
 
-
-    # receive_q_answer = PollHandler(DefaultConfig.TOTAL_VOTER_COUNT, qg.receive_quiz_answer)
-    # application.add_handler(receive_q_answer)
+    # application.add_handler(PollHandler(DefaultConfig.TOTAL_VOTER_COUNT, qg.receive_quiz_answer)
 
     # log all errors
     application.add_error_handler(error)

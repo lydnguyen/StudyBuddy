@@ -1,0 +1,60 @@
+@startuml
+'reference https://plantuml.com/ie-diagram
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity dim_Participant {
+  *ParticipantID: int <<PK>>
+  --
+  +Username: string
+  +Email: string
+  *Created_dt: datetime
+  *last_login_dt: datetime
+}
+
+entity dim_Quiz {
+  *QuizID: int <<PK>>
+  --
+  +Quizname: string
+  +Quizdifficulty: int
+  +Quiztype: string
+}
+
+entity dim_Question {
+  *QuestionID: int <<PK>>
+  *QuizID: int <<FK>>
+  --
+  *Text: string
+  +QuizHasMultipleAnswers: boolean
+}
+
+entity dim_Option {
+  *OptionID: int <<PK>>
+  *QuestionID: int <<FK>>
+  --
+  *Text: string
+  *IsCorrect: boolean
+  +option_no: int
+  *quiz_question_option: string
+}
+
+
+entity fact_Answer {
+  *AnswerID: int <<PK>>
+  *ParticipantID: int <<FK>>
+  *QuizID: int <<FK>>
+  *QuestionID: int <<FK>>
+  --
+  +quiz_question_option: string <<FK>>
+  +record_answer_dt: datetime
+  +idle_seconds: int
+}
+
+
+dim_Quiz ||--o{ dim_Question
+dim_Quiz ||--o{ fact_Answer
+dim_Question ||--|{ dim_Option
+dim_Participant |o--o{ fact_Answer
+fact_Answer }|--|| dim_Question
+fact_Answer }o--|| dim_Option
+@enduml
