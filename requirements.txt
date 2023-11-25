@@ -3,7 +3,9 @@ requests==2.22.0
 pyfiglet==0.8.post1
 python-dotenv===0.17.1
 
-
+psycopg2==2.9.9
+redshift_connector==2.0.917
+awswrangler==3.4.2
 PyYAML==6.0
 openai==0.27.8
 boto3==1.28.3

@@ -6,7 +6,6 @@ import boto3
 import json
 import base64
 from botocore.exceptions import ClientError
-import socket
 import os
 
 
