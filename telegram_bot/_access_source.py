@@ -4,7 +4,11 @@ import json
 import re
 import os
 from _authentications import Authenticate
+# from telegram_bot._authentications import Authenticate
 import redshift_connector
+import pandas as pd
+# pd.set_option('display.max_columns', None)
+# pd.set_option('max_colwidth', None)
 
 
 class ListQuestionaire:
@@ -39,15 +43,44 @@ class ListQuestionaire:
                     all_questions.update(question)
         return all_questions
 
-    def fetch_data(self):
+    def fetch_data(self, quizid: int):
         cursor = self.con.cursor()
-        cursor.execute('select * from accp.dim_participant;')
-        result = cursor.fetchall()
+        cursor.execute('select'
+                       '  q.quizid'
+                       ', q.questionid'
+                       ', q.context as question_content'
+                       ', o.optionid'
+                       ', o.option_no'
+                       ', o.context as option_content'
+                       ', o.iscorrect'
+                       ' from accp.dim_question q '
+                       ' join accp.dim_option o on q.questionid=o.questionid '
+                       ' where 1=1'
+                       f' and q.quizid = {str(quizid)}')
+        result = pd.DataFrame(cursor.fetchall(),
+                              columns=['quizid', 'questionid', 'question_content', 'optionid', 'optin_no',
+                                       'option_content', 'iscorrect'])
         cursor.close()
-        return result
+
+        # Reconstruct the fetched result to appropriate json
+        questions = {}
+        grouped = result.groupby('questionid')
+        for questionid, gr in grouped:
+            questions[int(questionid)] = {
+                'question': result[result['questionid'] == questionid].question_content.dropna().unique()[0]
+                , 'options': {}
+                , 'correct_optionid': int(result[(result['questionid'] == questionid) & (
+                            result['iscorrect'] == True)].optionid.dropna().unique()[0])
+            }
+            for index, row in gr.iterrows():
+                option = {int(row.optionid): row.option_content}
+                questions[int(row.questionid)]['options'].update(option)
+
+        return questions
 
 
-# all_questions = ListQuestionaire().fetch_data()
-# print(all_questions)
-# all_questions = ListQuestionaire().get_all_questions_available()
-# print(json.dumps(all_questions, indent=4))
+# new_fetch = ListQuestionaire().fetch_data(1)
+# # all_questions = ListQuestionaire().get_all_questions_available()[1]
+# # print(json.dumps(all_questions, indent=4))
+# print(json.dumps(new_fetch, indent=4))
+

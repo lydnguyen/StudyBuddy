@@ -1,3 +1,4 @@
+import functools
 import pyfiglet
 import logging
 import logging.config
@@ -56,7 +57,7 @@ def main():
     application = Application.builder().token(DefaultConfig.TELEGRAM_TOKEN).build()
 
     application.add_handler(CommandHandler('start', start))
-    application.add_handler(CommandHandler('start_quiz', qg.quiz))
+    application.add_handler(CommandHandler('start_quiz', functools.partial(qg.quiz, quizid=1)))
     application.add_handler(CommandHandler('switch_topic', mo.switch_topic))
     application.add_handler(CallbackQueryHandler(mo.level_menu, pattern='aws'))
     application.add_handler(CallbackQueryHandler(mo.level_menu, pattern='english'))
