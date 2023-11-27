@@ -1,14 +1,8 @@
-import boto3
-import yaml
-import json
-import re
 import os
 from _authentications import Authenticate
 # from telegram_bot._authentications import Authenticate
 import redshift_connector
 import pandas as pd
-# pd.set_option('display.max_columns', None)
-# pd.set_option('max_colwidth', None)
 
 
 class ListQuestionaire:
@@ -25,23 +19,6 @@ class ListQuestionaire:
                                               , user=self.username
                                               , password=self.password
                                               )
-
-        self.bucket = "studybuddy2212"  # TODO: Move this into secret. This storage will be used for writing data into
-        self.s3_client = boto3.client('s3')
-
-    def get_all_questions_available(self):
-        all_input_files = self.s3_client.list_objects(Bucket=self.bucket)
-        all_questions = {}
-        unique_id_question = 0
-        for i in all_input_files['Contents']:
-            if re.match('input_v1/\S+.yaml', i['Key']):
-                response = self.s3_client.get_object(Bucket=self.bucket, Key=i['Key'])
-                questionaire = yaml.safe_load(response["Body"])
-                for key, value in questionaire.items():
-                    unique_id_question += 1
-                    question = {unique_id_question: value}
-                    all_questions.update(question)
-        return all_questions
 
     def fetch_data(self, quizid: int):
         cursor = self.con.cursor()
@@ -78,9 +55,41 @@ class ListQuestionaire:
 
         return questions
 
+    def fetch_question_options(self):
+        cursor = self.con.cursor()
+        cursor.execute("select "
+                       " quizid"
+                       " , SPLIT_PART(quizname, ' - ', 1) as quiz_topic "
+                       " , SPLIT_PART(quizname, ' - ', 2) as quiz_level "
+                       " from accp.dim_quiz;")
+        result = pd.DataFrame(cursor.fetchall(), columns=['quizid', 'quiz_topic', 'quiz_level'])
+        cursor.close()
 
-# new_fetch = ListQuestionaire().fetch_data(1)
-# # all_questions = ListQuestionaire().get_all_questions_available()[1]
-# # print(json.dumps(all_questions, indent=4))
-# print(json.dumps(new_fetch, indent=4))
+        # Reconstruct the fetched result to appropriate json
+        topics = result.quiz_topic.unique()
+        levels = result.quiz_level.unique()
+        option_info = {}
+        level_dict = {'message': 'Choose level of difficulty:',
+                      'levels': {}
+                      }
+        for i in topics:
+            option_info[i] = {'id': i.lower()}
+        for i in levels:
+            level_dict['levels'][i] = i.capitalize()
+        level_dict['levels']['main'] = 'Main Menu'
 
+        return option_info, level_dict
+
+    def fetch_quizid(self, topic: str, level: str):
+        cursor = self.con.cursor()
+        cursor.execute("select quizid from accp.dim_quiz where 1=1"
+                       f" and SPLIT_PART(quizname, ' - ', 1) ilike '{topic}'"
+                       f" and SPLIT_PART(quizname, ' - ', 2) ilike '{level}'")
+        result = pd.DataFrame(cursor.fetchall(), columns=['quizid'])
+        cursor.close()
+
+        return result.quizid.values[0]
+
+# option_info, level_dict = ListQuestionaire().fetch_question_options()
+# print(json.dumps(option_info, indent=4))
+# print(json.dumps(level_dict, indent=4))

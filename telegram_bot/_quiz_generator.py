@@ -45,7 +45,7 @@ def questionaire_generator(quizid: int):
     return questions[question_id]
 
 
-async def quiz(update : Update, context: ContextTypes.DEFAULT_TYPE, quizid: int) -> None:
+async def quiz(update: Update, context: ContextTypes.DEFAULT_TYPE, quizid: int = 1) -> None:
     """Send a predefined poll"""
     quiz_question = get_question_object(quizid)
     logging.info('Update quiz form in telegram')
@@ -68,7 +68,7 @@ async def quiz(update : Update, context: ContextTypes.DEFAULT_TYPE, quizid: int)
     logging.info('done quiz')
 
 
-async def receive_quiz_answer(update : Update, context: ContextTypes.DEFAULT_TYPE, total_vote_count) -> None:
+async def receive_quiz_answer(update: Update, context: ContextTypes.DEFAULT_TYPE, total_vote_count) -> None:
     """Close quiz after three participants took it"""
     # the bot can receive closed poll updates we don't care about
     if update.poll.is_closed:
