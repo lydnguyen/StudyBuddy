@@ -3,8 +3,8 @@
 ' avoid problems with angled crows feet
 skinparam linetype ortho
 
-entity dim_Participant {
-  *ParticipantID: int <<PK>>
+entity dim_participant {
+  *ParticipantID: string <<PK>>
   --
   +Username: string
   +Email: string
@@ -12,7 +12,7 @@ entity dim_Participant {
   *last_login_dt: datetime
 }
 
-entity dim_Quiz {
+entity dim_quiz {
   *QuizID: int <<PK>>
   --
   +Quizname: string
@@ -20,7 +20,7 @@ entity dim_Quiz {
   +Quiztype: string
 }
 
-entity dim_Question {
+entity dim_question {
   *QuestionID: int <<PK>>
   *QuizID: int <<FK>>
   --
@@ -28,7 +28,7 @@ entity dim_Question {
   +QuizHasMultipleAnswers: boolean
 }
 
-entity dim_Option {
+entity dim_option {
   *OptionID: int <<PK>>
   *QuestionID: int <<FK>>
   --
@@ -38,10 +38,9 @@ entity dim_Option {
   *quiz_question_option: string
 }
 
-
-entity fact_Answer {
+entity fact_answer {
   *AnswerID: int <<PK>>
-  *ParticipantID: int <<FK>>
+  *ParticipantID: int <<FK>> 'todo: update to string type
   *QuizID: int <<FK>>
   *QuestionID: int <<FK>>
   --
@@ -50,11 +49,22 @@ entity fact_Answer {
   +idle_seconds: int
 }
 
+entity fact_quizoption_selected {
+  *QuizSelectedID: int <<PK>>
+  *ParticipantID: string <<FK>>
+  *QuizID: int <<FK>>
+  --
+  *selected_quiz_ts: datetime
+}
 
-dim_Quiz ||--o{ dim_Question
-dim_Quiz ||--o{ fact_Answer
-dim_Question ||--|{ dim_Option
-dim_Participant |o--o{ fact_Answer
-fact_Answer }|--|| dim_Question
-fact_Answer }o--|| dim_Option
+
+dim_quiz ||--o{ dim_question
+dim_quiz ||--o{ fact_answer
+dim_quiz ||--|{ fact_quizoption_selected
+dim_question ||--|{ dim_option
+dim_participant |o--o{ fact_answer
+dim_participant ||--o{ fact_quizoption_selected
+fact_answer }|--|| dim_question
+fact_answer }o--|| dim_option
+
 @enduml

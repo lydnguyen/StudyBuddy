@@ -1,18 +1,18 @@
 --create schema accp ;
 -- Insert test data for Participants
---drop table participant;
+--drop table dim_participant cascade;
 CREATE TABLE accp.dim_participant (
-  ParticipantID INT PRIMARY KEY,
+  ParticipantID VARCHAR(255) PRIMARY KEY,
   Username VARCHAR(255),
   Email VARCHAR(255),
-  Created_dt DATETIME,
-  last_login_dt DATETIME
+  Created_dt TIMESTAMP,
+  last_login_dt TIMESTAMP
 );
 INSERT INTO accp.dim_participant (ParticipantID, Username, Email, Created_dt, last_login_dt)
 VALUES
-  (1, 'Participant1', 'participant1@example.com', '2023-01-01', '2023-11-23'),
-  (2, 'Participant2', 'participant2@example.com', '2023-01-02', '2023-11-23'),
-  (3, 'Participant3', 'participant3@example.com', '2023-01-03', '2023-11-23'),
+  ('1', 'Participant1', 'participant1@example.com', '2023-01-01', '2023-11-23'),
+  ('2', 'Participant2', 'participant2@example.com', '2023-01-02', '2023-11-23'),
+  ('3', 'Participant3', 'participant3@example.com', '2023-01-03', '2023-11-23'),
 
 -- Insert test data for Quizzes
 --drop table quiz;
@@ -123,7 +123,7 @@ CREATE TABLE accp.fact_answer (
   QuizID INT REFERENCES accp.dim_quiz(QuizID),
   QuestionID INT REFERENCES accp.dim_question(QuestionID),
   quiz_question_option varchar REFERENCES accp.dim_option(quiz_question_option),
-  record_answer_dt DATETIME,
+  record_answer_dt TIMESTAMP,
   idle_seconds  int
 );
 INSERT INTO accp.fact_answer (AnswerID, ParticipantID, QuizID, QuestionID, quiz_question_option, record_answer_dt, idle_seconds)
@@ -154,4 +154,9 @@ VALUES
   (24, 2, 4, 12, '4-12-3', '2023-11-08' ,7);
 
 
-
+CREATE TABLE accp.fact_quizoption_selected (
+  QuizSelectedID INT PRIMARY KEY,
+  ParticipantID VARCHAR(255),
+  QuizID INT REFERENCES accp.dim_quiz(QuizID),
+  selected_quiz_ts TIMESTAMP
+);

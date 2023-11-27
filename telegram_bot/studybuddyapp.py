@@ -1,4 +1,3 @@
-import functools
 import pyfiglet
 import logging
 import logging.config
@@ -59,7 +58,6 @@ def main():
 
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler(['next_question', 'start_quiz'], qg.quiz))
-    # application.add_handler(CommandHandler(['next_question', 'start_quiz'], functools.partial(qg.quiz, quizid=1)))
     application.add_handler(CommandHandler(['choose_topic', 'switch_topic'], mo.switch_topic))
 
     option_info, level_info = ListQuestionaire().fetch_question_options()

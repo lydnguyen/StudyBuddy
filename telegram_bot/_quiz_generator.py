@@ -45,9 +45,14 @@ def questionaire_generator(quizid: int):
     return questions[question_id]
 
 
-async def quiz(update: Update, context: ContextTypes.DEFAULT_TYPE, quizid: int = 1) -> None:
+async def quiz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a predefined poll"""
+    userid = update.message.from_user.id
+    quizid = ListQuestionaire().fetch_chosen_quiztopic(participantid=userid)
+
+    logging.info(f'user id {userid} has quizid {quizid}')
     quiz_question = get_question_object(quizid)
+
     logging.info('Update quiz form in telegram')
     message = await update.effective_message.reply_poll(
         question=quiz_question.question

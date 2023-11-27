@@ -1,7 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import os
 import logging
-from _access_source import ListQuestionaire
+from _access_source import ListQuestionaire, UpdateData
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
     level=os.environ.get("LOG_LEVEL", "INFO").upper(),
@@ -52,8 +52,12 @@ async def return_options(update, context):
     await query.edit_message_text(
         text=f'You are now quizing for topic {topic.upper()}, level {level.upper()}.',
     )
+
+    # Update user's choice into the database
     quizid = ListQuestionaire().fetch_quizid(topic, level)
     userid = query.from_user.id
+    UpdateData().insert_users_quiz_optionlevel(quizid, userid)
+
     logging.info(f'User {userid} choose quizid {quizid}')
 
 

@@ -3,6 +3,7 @@ from _authentications import Authenticate
 # from telegram_bot._authentications import Authenticate
 import redshift_connector
 import pandas as pd
+from datetime import datetime
 
 
 class ListQuestionaire:
@@ -47,7 +48,7 @@ class ListQuestionaire:
                 'question': result[result['questionid'] == questionid].question_content.dropna().unique()[0]
                 , 'options': {}
                 , 'correct_optionid': int(result[(result['questionid'] == questionid) & (
-                            result['iscorrect'] == True)].optionid.dropna().unique()[0])
+                        result['iscorrect'] == True)].optionid.dropna().unique()[0])
             }
             for index, row in gr.iterrows():
                 option = {int(row.optionid): row.option_content}
@@ -90,6 +91,54 @@ class ListQuestionaire:
 
         return result.quizid.values[0]
 
+    def fetch_chosen_quiztopic(self, participantid):
+        cursor = self.con.cursor()
+        cursor.execute("select top 1 "
+                       "    quizid"
+                       " from accp.fact_quizoption_selected "
+                       f" where participantid = {participantid} "
+                       " order by selected_quiz_ts desc")
+        result = pd.DataFrame(cursor.fetchall(), columns=['quizid'])
+        cursor.close()
+        if len(result) == 0:
+            return 1
+        else:
+            return result.quizid.values[0]
+
+
+class UpdateData:
+    def __init__(self):
+        self.secret = Authenticate().get_secret()
+        self.host = self.secret['db_host']
+        self.dbname = self.secret['db_dev']
+        self.port = int(os.environ.get("DB_PORT", 5439))
+        self.username = self.secret['redshift_username']
+        self.password = self.secret['redshift_password']
+
+    def insert_users_quiz_optionlevel(self, quizid, userid):
+        con = redshift_connector.connect(host=self.host
+                                         , database=self.dbname
+                                         , port=self.port
+                                         , user=self.username
+                                         , password=self.password
+                                         )
+        selected_quiz_ts = datetime.now()
+        cursor = con.cursor()
+        cursor.execute('select max(quizselectedid) from accp.fact_quizoption_selected')
+        quizselected_id = cursor.fetchone()[0]
+        if quizselected_id is None:
+            quizselected_id = 1
+        else:
+            quizselected_id += 1
+        sql = f"INSERT INTO accp.fact_quizoption_selected (quizselectedid, participantid, quizid, selected_quiz_ts) VALUES ({quizselected_id}, {userid}, {quizid}, '{selected_quiz_ts}')"
+        cursor.execute(sql)
+        cursor.close()
+        con.commit()
+        con.close()
+
+
 # option_info, level_dict = ListQuestionaire().fetch_question_options()
 # print(json.dumps(option_info, indent=4))
 # print(json.dumps(level_dict, indent=4))
+# test = ListQuestionaire().fetch_chosen_quiztopic(3)
+# print(test)
