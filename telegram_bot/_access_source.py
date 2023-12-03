@@ -1,9 +1,14 @@
 import os
 from _authentications import Authenticate
+import psycopg2
 # from telegram_bot._authentications import Authenticate
-import redshift_connector
 import pandas as pd
 from datetime import datetime
+import logging
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=os.environ.get("LOG_LEVEL", "INFO").upper(),
+)
 
 
 class ListQuestionaire:
@@ -11,15 +16,15 @@ class ListQuestionaire:
         self.secret = Authenticate().get_secret()
         self.host = self.secret['db_host']
         self.dbname = self.secret['db_dev']
-        self.port = int(os.environ.get("DB_PORT", 5439))
-        self.username = self.secret['redshift_username']
-        self.password = self.secret['redshift_password']
-        self.con = redshift_connector.connect(host=self.host
-                                              , database=self.dbname
-                                              , port=self.port
-                                              , user=self.username
-                                              , password=self.password
-                                              )
+        self.port = int(os.environ.get("DB_PORT", 5432))
+        self.username = self.secret['username']
+        self.password = self.secret['password']
+        self.con = psycopg2.connect(host=self.host
+                                    , database=self.dbname
+                                    , port=self.port
+                                    , user=self.username
+                                    , password=self.password
+                                    )
 
     def fetch_data(self, quizid: int):
         cursor = self.con.cursor()
@@ -93,11 +98,11 @@ class ListQuestionaire:
 
     def fetch_chosen_quiztopic(self, participantid):
         cursor = self.con.cursor()
-        cursor.execute("select top 1 "
-                       "    quizid"
+        cursor.execute("select quizid"
                        " from accp.fact_quizoption_selected "
-                       f" where participantid = {participantid} "
-                       " order by selected_quiz_ts desc")
+                       f" where participantid = '{participantid}' "
+                       " order by selected_quiz_ts desc"
+                       " fetch first 1 rows only;")
         result = pd.DataFrame(cursor.fetchall(), columns=['quizid'])
         cursor.close()
         if len(result) == 0:
@@ -111,17 +116,17 @@ class UpdateData:
         self.secret = Authenticate().get_secret()
         self.host = self.secret['db_host']
         self.dbname = self.secret['db_dev']
-        self.port = int(os.environ.get("DB_PORT", 5439))
-        self.username = self.secret['redshift_username']
-        self.password = self.secret['redshift_password']
+        self.port = int(os.environ.get("DB_PORT", 5432))
+        self.username = self.secret['username']
+        self.password = self.secret['password']
 
     def insert_users_quiz_optionlevel(self, quizid, userid):
-        con = redshift_connector.connect(host=self.host
-                                         , database=self.dbname
-                                         , port=self.port
-                                         , user=self.username
-                                         , password=self.password
-                                         )
+        con = psycopg2.connect(host=self.host
+                               , database=self.dbname
+                               , port=self.port
+                               , user=self.username
+                               , password=self.password
+                               )
         selected_quiz_ts = datetime.now()
         cursor = con.cursor()
         cursor.execute('select max(quizselectedid) from accp.fact_quizoption_selected')
@@ -135,7 +140,6 @@ class UpdateData:
         cursor.close()
         con.commit()
         con.close()
-
 
 # option_info, level_dict = ListQuestionaire().fetch_question_options()
 # print(json.dumps(option_info, indent=4))

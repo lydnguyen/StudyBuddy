@@ -40,7 +40,7 @@ entity dim_option {
 
 entity fact_answer {
   *AnswerID: int <<PK>>
-  *ParticipantID: int <<FK>> 'todo: update to string type
+  *ParticipantID: string <<FK>>
   *QuizID: int <<FK>>
   *QuestionID: int <<FK>>
   --
