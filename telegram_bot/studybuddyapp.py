@@ -3,6 +3,7 @@ import logging
 import logging.config
 import os
 from _authentications import Authenticate
+from _access_source import ListQuestionaire
 import _quiz_generator as qg
 import _menu_options as mo
 from telegram import (
@@ -46,7 +47,7 @@ async def start(update, context):
                                    , resize_keyboard=True
                                    )
     await context.bot.send_message(chat_id=update.effective_chat.id,
-                                   text="Welcome to your own Study Buddy. \n What do you want to do?",
+                                   text="Welcome to your own Study Buddy. \n Which topic do you want?",
                                    reply_markup=keyboard,
                                    )
 
@@ -56,19 +57,19 @@ def main():
     application = Application.builder().token(DefaultConfig.TELEGRAM_TOKEN).build()
 
     application.add_handler(CommandHandler('start', start))
-    application.add_handler(CommandHandler('start_quiz', qg.quiz))
-    application.add_handler(CommandHandler('switch_topic', mo.switch_topic))
-    application.add_handler(CallbackQueryHandler(mo.level_menu, pattern='aws'))
-    application.add_handler(CallbackQueryHandler(mo.level_menu, pattern='english'))
-    application.add_handler(CallbackQueryHandler(mo.level_menu, pattern='math'))
-    application.add_handler(CallbackQueryHandler(mo.main_menu, pattern='main'))
-    application.add_handler(CallbackQueryHandler(mo.return_options, pattern='beginner'))
-    application.add_handler(CallbackQueryHandler(mo.return_options, pattern='intermediate'))
-    application.add_handler(CallbackQueryHandler(mo.return_options, pattern='advanced'))
+    application.add_handler(CommandHandler(['next_question', 'start_quiz'], qg.quiz))
+    application.add_handler(CommandHandler(['choose_topic', 'switch_topic'], mo.switch_topic))
 
+    option_info, level_info = ListQuestionaire().fetch_question_options()
+    for i in option_info.values():
+        application.add_handler(CallbackQueryHandler(mo.level_menu, pattern=i['id']))
+    for i in level_info['levels'].keys():
+        if i == 'main':
+            application.add_handler(CallbackQueryHandler(mo.main_menu, pattern=i))
+        else:
+            application.add_handler(CallbackQueryHandler(mo.return_options, pattern=i))
 
-    # receive_q_answer = PollHandler(DefaultConfig.TOTAL_VOTER_COUNT, qg.receive_quiz_answer)
-    # application.add_handler(receive_q_answer)
+    # application.add_handler(PollHandler(DefaultConfig.TOTAL_VOTER_COUNT, qg.receive_quiz_answer)
 
     # log all errors
     application.add_error_handler(error)

@@ -1,25 +1,14 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import os
 import logging
+from _access_source import ListQuestionaire, UpdateData
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
     level=os.environ.get("LOG_LEVEL", "INFO").upper(),
 )
 # Original source: https://stackoverflow.com/questions/51125356/proper-way-to-build-menus-with-python-telegram-bot
 
-option_info = {
-    'AWS CAA03': {'id': 'aws'},
-    'English': {'id': 'english'},
-    'Math': {'id': 'math'}
-}
-
-level_info = {'message': 'Choose level of difficulty:',
-              'levels': {
-                  'beginner': 'Beginner',
-                  'intermediate': 'Intermediate',
-                  'advanced': 'Advanced',
-                  'main': 'Main Menu',
-              }}
+option_info, level_info = ListQuestionaire().fetch_question_options()
 
 topic = ''
 level = ''
@@ -64,6 +53,13 @@ async def return_options(update, context):
         text=f'You are now quizing for topic {topic.upper()}, level {level.upper()}.',
     )
 
+    # Update user's choice into the database
+    quizid = ListQuestionaire().fetch_quizid(topic, level)
+    userid = query.from_user.id
+    UpdateData().insert_users_quiz_optionlevel(quizid, userid)
+
+    logging.info(f'User {userid} choose quizid {quizid}')
+
 
 ############################ Keyboards #########################################
 async def main_menu_keyboard():
@@ -80,4 +76,3 @@ async def level_menu_keyboard():
         button = [InlineKeyboardButton(text=key, callback_data=value)]
         keyboard.append(button)
     return InlineKeyboardMarkup(keyboard)
-

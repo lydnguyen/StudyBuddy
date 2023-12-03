@@ -30,9 +30,9 @@ class MultiItems:
 
 
 class QuizQuestion:
-    def __init__(self, question="", answers=[], correct_answer=""):
+    def __init__(self, question="", options=[], correct_answer=""):
         self.question = question
-        self.answers = answers
+        self.options = options
         self.correct_answer = correct_answer
         self.correct_answer_position = self.__get_correct_answer_position__()
 
@@ -40,8 +40,8 @@ class QuizQuestion:
         ret = -1
 
         i = 0
-        for answer in self.answers:
-            if answer.lower() == self.correct_answer.lower():
+        for option in self.options:
+            if option.lower() == self.correct_answer.lower():
                 ret = i
                 break
             i = i + 1
@@ -49,4 +49,4 @@ class QuizQuestion:
         return ret
 
     def __str__(self):
-        return f"question:{self.question} answers:{self.answers} correct_answer:{self.correct_answer} correct_answer_position:{self.correct_answer_position} "
+        return f"question:{self.question} answers:{self.options} correct_answer:{self.correct_answer} correct_answer_position:{self.correct_answer_position} "

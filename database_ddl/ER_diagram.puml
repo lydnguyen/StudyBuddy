@@ -1,0 +1,70 @@
+@startuml
+'reference https://plantuml.com/ie-diagram
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity dim_participant {
+  *ParticipantID: string <<PK>>
+  --
+  +Username: string
+  +Email: string
+  *Created_dt: datetime
+  *last_login_dt: datetime
+}
+
+entity dim_quiz {
+  *QuizID: int <<PK>>
+  --
+  +Quizname: string
+  +Quizdifficulty: int
+  +Quiztype: string
+}
+
+entity dim_question {
+  *QuestionID: int <<PK>>
+  *QuizID: int <<FK>>
+  --
+  *Text: string
+  +QuizHasMultipleAnswers: boolean
+}
+
+entity dim_option {
+  *OptionID: int <<PK>>
+  *QuestionID: int <<FK>>
+  --
+  *Text: string
+  *IsCorrect: boolean
+  +option_no: int
+  *quiz_question_option: string
+}
+
+entity fact_answer {
+  *AnswerID: int <<PK>>
+  *ParticipantID: string <<FK>>
+  *QuizID: int <<FK>>
+  *QuestionID: int <<FK>>
+  --
+  +quiz_question_option: string <<FK>>
+  +record_answer_dt: datetime
+  +idle_seconds: int
+}
+
+entity fact_quizoption_selected {
+  *QuizSelectedID: int <<PK>>
+  *ParticipantID: string <<FK>>
+  *QuizID: int <<FK>>
+  --
+  *selected_quiz_ts: datetime
+}
+
+
+dim_quiz ||--o{ dim_question
+dim_quiz ||--o{ fact_answer
+dim_quiz ||--|{ fact_quizoption_selected
+dim_question ||--|{ dim_option
+dim_participant |o--o{ fact_answer
+dim_participant ||--o{ fact_quizoption_selected
+fact_answer }|--|| dim_question
+fact_answer }o--|| dim_option
+
+@enduml
