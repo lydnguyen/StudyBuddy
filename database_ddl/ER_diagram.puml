@@ -4,63 +4,63 @@
 skinparam linetype ortho
 
 entity dim_participant {
-  *ParticipantID: string <<PK>>
+  *participantid: string <<pk>>
   --
-  +Username: string
-  +Email: string
-  *Created_dt: datetime
+  +username: string
+  +email: string
+  *created_dt: datetime
   *last_login_dt: datetime
 }
 
-entity dim_quiz {
-  *QuizID: int <<PK>>
+entity dim_quiz_multiple {
+  *quizid: int <<pk>>
   --
-  +Quizname: string
-  +Quizdifficulty: int
-  +Quiztype: string
+  +quiztopic: string
+  +quizdifficulty: int
+  +quizlevel: string
 }
 
 entity dim_question {
-  *QuestionID: int <<PK>>
-  *QuizID: int <<FK>>
+  *questionid: int <<pk>>
+  *quizid: int <<fk>>
   --
-  *Text: string
-  +QuizHasMultipleAnswers: boolean
+  *text: string
+  +quizhasmultipleanswers: boolean
 }
 
 entity dim_option {
-  *OptionID: int <<PK>>
-  *QuestionID: int <<FK>>
+  *optionid: int <<pk>>
+  *questionid: int <<fk>>
   --
-  *Text: string
-  *IsCorrect: boolean
+  *text: string
+  *iscorrect: boolean
   +option_no: int
   *quiz_question_option: string
 }
 
 entity fact_answer {
-  *AnswerID: int <<PK>>
-  *ParticipantID: string <<FK>>
-  *QuizID: int <<FK>>
-  *QuestionID: int <<FK>>
+  *answerid: int <<pk>>
+  *participantid: string <<fk>>
+  *quizid: int <<fk>>
+  *questionid: int <<fk>>
   --
-  +quiz_question_option: string <<FK>>
+  +quiz_question_option: string <<fk>>
   +record_answer_dt: datetime
   +idle_seconds: int
 }
 
 entity fact_quizoption_selected {
-  *QuizSelectedID: int <<PK>>
-  *ParticipantID: string <<FK>>
-  *QuizID: int <<FK>>
+  *quizselectedid: int <<pk>>
+  *participantid: string <<fk>>
+  *quizid: int <<fk>>
   --
   *selected_quiz_ts: datetime
 }
 
 
-dim_quiz ||--o{ dim_question
-dim_quiz ||--o{ fact_answer
-dim_quiz ||--|{ fact_quizoption_selected
+dim_quiz_multiple ||--o{ dim_question
+dim_quiz_multiple ||--o{ fact_answer
+dim_quiz_multiple ||--|{ fact_quizoption_selected
 dim_question ||--|{ dim_option
 dim_participant |o--o{ fact_answer
 dim_participant ||--o{ fact_quizoption_selected

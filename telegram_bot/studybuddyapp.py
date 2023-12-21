@@ -63,11 +63,12 @@ def main():
     option_info, level_info = ListQuestionaire().fetch_question_options()
     for i in option_info.values():
         application.add_handler(CallbackQueryHandler(mo.level_menu, pattern=i['id']))
-    for i in level_info['levels'].keys():
-        if i == 'main':
-            application.add_handler(CallbackQueryHandler(mo.main_menu, pattern=i))
-        else:
-            application.add_handler(CallbackQueryHandler(mo.return_options, pattern=i))
+    for topic, levels in level_info['levels'].items():
+        for level in levels:
+            if 'main' in level:
+                application.add_handler(CallbackQueryHandler(mo.main_menu, pattern=level))
+            else:
+                application.add_handler(CallbackQueryHandler(mo.return_options, pattern=level))
 
     # application.add_handler(PollHandler(DefaultConfig.TOTAL_VOTER_COUNT, qg.receive_quiz_answer)
 

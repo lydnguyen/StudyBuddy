@@ -31,12 +31,12 @@ async def main_menu(update, context):
 async def level_menu(update, context):
     query = update.callback_query
     await query.answer()
-    await query.edit_message_text(
-        text=level_info['message'],
-        reply_markup=await level_menu_keyboard())
     global topic
     if query.data:
         topic = query.data
+    await query.edit_message_text(
+        text=level_info['message'],
+        reply_markup=await level_menu_keyboard(topic))
     logging.info(f'User choose for topic: {topic}')
 
 
@@ -50,7 +50,7 @@ async def return_options(update, context):
     logging.info(f'User choose for level: {level}')
 
     await query.edit_message_text(
-        text=f'You are now quizing for topic {topic.upper()}, level {level.upper()}.',
+        text=f'You are now quizing for topic {topic.upper()}, \n\nLevel {level.upper()}.',
     )
 
     # Update user's choice into the database
@@ -70,9 +70,10 @@ async def main_menu_keyboard():
     return InlineKeyboardMarkup(keyboard)
 
 
-async def level_menu_keyboard():
+async def level_menu_keyboard(topic):
     keyboard = []
-    for value, key in level_info['levels'].items():
-        button = [InlineKeyboardButton(text=key, callback_data=value)]
+    logging.info(f'topic: {topic}')
+    for level in level_info['levels'][topic]:
+        button = [InlineKeyboardButton(text=level, callback_data=level)]
         keyboard.append(button)
     return InlineKeyboardMarkup(keyboard)

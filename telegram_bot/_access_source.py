@@ -63,34 +63,32 @@ class ListQuestionaire:
 
     def fetch_question_options(self):
         cursor = self.con.cursor()
-        cursor.execute("select "
-                       " quizid"
-                       " , SPLIT_PART(quizname, ' - ', 1) as quiz_topic "
-                       " , SPLIT_PART(quizname, ' - ', 2) as quiz_level "
-                       " from accp.dim_quiz;")
+        cursor.execute("select quizid, Quiztopic as quiz_topic , Quizlevel as quiz_level from accp.dim_quiz_multiple;")
         result = pd.DataFrame(cursor.fetchall(), columns=['quizid', 'quiz_topic', 'quiz_level'])
         cursor.close()
 
+        # Group by 'quiz_topic' and gather 'quiz_level' into lists, then convert to dictionary
+        topic_level = result.groupby('quiz_topic')['quiz_level'].apply(list).to_dict()
+        topic_level = {k.lower(): v for k, v in topic_level.items()}
+        for topics, levels in topic_level.items():
+            levels.append('main menu')
+
         # Reconstruct the fetched result to appropriate json
         topics = result.quiz_topic.unique()
-        levels = result.quiz_level.unique()
         option_info = {}
         level_dict = {'message': 'Choose level of difficulty:',
-                      'levels': {}
+                      'levels': topic_level
                       }
         for i in topics:
             option_info[i] = {'id': i.lower()}
-        for i in levels:
-            level_dict['levels'][i] = i.capitalize()
-        level_dict['levels']['main'] = 'Main Menu'
 
         return option_info, level_dict
 
     def fetch_quizid(self, topic: str, level: str):
         cursor = self.con.cursor()
-        cursor.execute("select quizid from accp.dim_quiz where 1=1"
-                       f" and SPLIT_PART(quizname, ' - ', 1) ilike '{topic}'"
-                       f" and SPLIT_PART(quizname, ' - ', 2) ilike '{level}'")
+        sql = f"select quizid from accp.dim_quiz_multiple where 1=1 and Quiztopic ilike '{topic}' and Quizlevel ilike '{level}'"
+        logging.info(sql)
+        cursor.execute(sql)
         result = pd.DataFrame(cursor.fetchall(), columns=['quizid'])
         cursor.close()
 
@@ -141,7 +139,8 @@ class UpdateData:
         con.commit()
         con.close()
 
-# option_info, level_dict = ListQuestionaire().fetch_question_options()
+option_info, level_info = ListQuestionaire().fetch_question_options()
+# import json
 # print(json.dumps(option_info, indent=4))
 # print(json.dumps(level_dict, indent=4))
 # test = ListQuestionaire().fetch_chosen_quiztopic(3)

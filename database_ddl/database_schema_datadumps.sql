@@ -1,4 +1,4 @@
---create schema accp ;
+create schema accp ;
 -- Insert test data for Participants
 --drop table dim_participant cascade;
 CREATE TABLE accp.dim_participant (
@@ -14,20 +14,21 @@ VALUES
   ('2', 'Participant2', 'participant2@example.com', '2023-01-02', '2023-11-23'),
   ('3', 'Participant3', 'participant3@example.com', '2023-01-03', '2023-11-23'),
 
--- Insert test data for Quizzes
---drop table quiz;
-CREATE TABLE accp.dim_quiz (
+-- Insert test data for dim_quiz_multiple
+CREATE TABLE accp.dim_quiz_multiple (
   QuizID INT PRIMARY KEY,
-  Quizname VARCHAR(255),
+  Quiztopic VARCHAR(255),
   Quizdifficulty INT,
-  Quiztype VARCHAR(255)
+  Quizlevel VARCHAR(255)
 );
-INSERT INTO accp.dim_quiz (QuizID, Quizname, Quizdifficulty, Quiztype)
+INSERT INTO accp.dim_quiz_multiple (QuizID, Quiztopic, Quizdifficulty, Quizlevel)
 VALUES
-  (1, 'English - beginners', 1, 'multi-option'),
-  (2, 'English - intermediate', 2, 'multi-option'),
-  (3, 'Math - intermediate', 2, 'multi-option'),
-  (4, 'Math - advanced', 3, 'multi-option');
+  (1, 'English', 1, 'beginners'),
+  (2, 'English', 2, 'intermediate'),
+  (3, 'Math', 2, 'intermediate'),
+  (4, 'Math', 3, 'advanced'),
+  (5, 'AWS Certified Solutions Architect Associate', 1, 'Availablity & Scalability')
+  ;
 
 -- Insert test data for Questions
 CREATE TABLE accp.dim_question (
@@ -49,7 +50,9 @@ VALUES
   (9, 3, 'Question 3 for Math - intermediate', FALSE),
   (10, 4, 'Question 1 for Math - advanced', FALSE),
   (11, 4, 'Question 2 for Math - advanced', FALSE),
-  (12, 4, 'Question 3 for Math - advanced', FALSE);
+  (12, 4, 'Question 3 for Math - advanced', FALSE),
+  (13, 5, 'What types of traffic can AWS Application Load Balancer (ALB) handle?', FALSE),
+  (14, 5, 'Which of the following features is supported by AWS ALB for routing decisions?', FALSE);
 
 -- Insert test data for Options
 CREATE TABLE accp.dim_option (
@@ -113,13 +116,22 @@ VALUES
 (45,	12,	'Option 1 for Question 3',	TRUE,	1,	'4-12-1'),
 (46,	12,	'Option 2 for Question 3',	FALSE,	2,	'4-12-2'),
 (47,	12,	'Option 3 for Question 3',	FALSE,	3,	'4-12-3'),
-(48,	12,	'Option 4 for Question 3',	FALSE,	4,	'4-12-4')
+(48,	12,	'Option 4 for Question 3',	FALSE,	4,	'4-12-4'),
+-- options for aws
+(49, 13, 'HTTP/2 and WebSockets', TRUE, 1, '5-13-1'),
+(50, 13, 'FTP and SFTP', FALSE, 2, '5-13-2'),
+(51, 13, 'SMTP and POP3', FALSE, 3, '5-13-3'),
+(52, 13, 'MQTT and AMQP', FALSE, 4, '5-13-4'),
+(53, 14, 'CPU usage of target instances', FALSE, 1, '5-14-1'),
+(54, 14, 'URL path-based routing', TRUE, 2, '5-14-2'),
+(55, 14, 'The geographical location of the user', FALSE, 3, '5-14-3'),
+(56, 14, 'The age of the HTTP request', FALSE, 4, '5-14-4');
 
 -- Insert test data for Answers
 --drop table answer;
 CREATE TABLE accp.fact_answer (
   AnswerID INT PRIMARY KEY,
-  ParticipantID INT REFERENCES accp.dim_participant(ParticipantID),
+  ParticipantID VARCHAR(255) REFERENCES accp.dim_participant(ParticipantID),
   QuizID INT REFERENCES accp.dim_quiz(QuizID),
   QuestionID INT REFERENCES accp.dim_question(QuestionID),
   quiz_question_option varchar REFERENCES accp.dim_option(quiz_question_option),
