@@ -2,6 +2,8 @@ import pyfiglet
 import logging
 import logging.config
 import os
+import datetime
+from _quiz_generator import send_quiz_poll_scheduler
 from _authentications import Authenticate
 from _access_source import ListQuestionaire
 import _quiz_generator as qg
@@ -15,6 +17,8 @@ from telegram.ext import (
     CommandHandler,
     CallbackQueryHandler
 )
+logging.basicConfig()
+logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
 
 def error(update, context):
@@ -74,6 +78,18 @@ def main():
 
     # log all errors
     application.add_error_handler(error)
+
+    times = [
+        datetime.datetime.now() + datetime.timedelta(seconds=5)
+        , datetime.datetime.now() + datetime.timedelta(seconds=7)
+        , datetime.datetime.now() + datetime.timedelta(seconds=10)
+    ]
+    for time in times:
+        application.job_queue.run_daily(
+            callback=send_quiz_poll_scheduler
+            , time=time.astimezone()
+            , job_kwargs={'misfire_grace_time': 10}  # Adding grace time for misfire
+        )
 
     # Run the bot until user press Ctrl-C
     application.run_polling(allowed_updates=Update.ALL_TYPES)

@@ -85,3 +85,27 @@ async def receive_quiz_answer(update: Update, context: ContextTypes.DEFAULT_TYPE
         except KeyError:
             return
         await context.bot.stop_poll(quiz_data["chat_id"], quiz_data["message_id"])
+
+
+async def send_quiz_poll_scheduler(context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Send a predefined poll"""
+    userid = 6261265168
+    quizid = ListQuestionaire().fetch_chosen_quiztopic(participantid=userid)
+
+    logging.info(f'----------------------------------------')
+
+    # logging.info(f'user id {userid} has quizid {quizid}')
+    quiz_question = get_question_object(quizid)
+
+    # logging.info('Update quiz form in telegram')
+    await context.bot.send_poll(
+        chat_id=userid
+        , question=quiz_question.question
+        , options=quiz_question.options
+        , type=Poll.QUIZ
+        , correct_option_id=quiz_question.correct_answer_position
+        , is_anonymous=False
+        , allows_multiple_answers=True
+    )
+    logging.info('Quiz poll sent successfully.')
+    logging.info(f'----------------------------------------')

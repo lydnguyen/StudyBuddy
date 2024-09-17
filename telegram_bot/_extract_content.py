@@ -195,7 +195,7 @@ for element in questionaire:
         , 'choices': dict_a
     }
 
-
+# Defining the questions that were not mentioned in the aws_service dictionary
 service = []
 for key, value in aws_services.items():
     service += value
@@ -205,42 +205,22 @@ for i in range(584):
         general_aws_questions.append(i)
 general_aws_questions.pop(0)
 aws_services['Other AWS services'] = general_aws_questions
-#
-# id_question = max(dict_qa.keys())
-# for question_id in general_aws_questions:
-#     element = questionaire[question_id-1]
-#     question_element = element.find('p', class_='card-text').text.strip()
-#     element_correct_answer = find_voted_correct_answer(element)
-#     answers_element = element.find_all('li', class_='multi-choice-item')
-#     dict_a = {}
-#     for i in answers_element:
-#         choice_letter = (i.find('span', class_='multi-choice-letter')['data-choice-letter'])
-#         answer = (i.get_text(strip=True).replace(choice_letter + '.', '').split('Most Voted')[0])
-#         dict_a[choice_letter] = answer
-#
-#     dict_qa[id_question] = {
-#         'question': question_element
-#         , 'correct_answer': element_correct_answer
-#         , 'choices': dict_a
-#     }
-#     print(json.dumps(dict_qa[id_question], indent=4))
-#     id_question += 1
-#
 
-
-
-
-test1 = pd.DataFrame.from_dict(data=dict_qa, orient='index').reset_index().rename(columns={'index':'qid'})
-test1=test1[['qid', 'question', 'correct_answer']]
-test2={}
+# Constructing the right csv format output
+df_qa_1 = pd.DataFrame.from_dict(data=dict_qa, orient='index').reset_index().rename(columns={'index':'qid'})
+df_qa_1=df_qa_1[['qid', 'question', 'correct_answer']]
+df_qa_choices={}
 for key,value in dict_qa.items():
-    test2[key] = value['choices']
+    df_qa_choices[key] = value['choices']
 
-test3 = pd.DataFrame.from_dict(data=test2, orient='index').reset_index().rename(columns={'index':'qid'})
+df_qa_choices_processed = pd.DataFrame.from_dict(data=df_qa_choices, orient='index').reset_index().rename(columns={'index':'qid'})
+#
+# #Checking content of the choices options
+# df_qa_choices_processed.E.isnull()
+# df_qa_choices_processed.loc[df_qa_choices_processed.F.isnull() == False]
 
-test3.E.isnull()
-test3.loc[test3.F.isnull() == False]
-result = pd.merge(right=test1, left=test3, on='qid')
+#
+result = pd.merge(right=df_qa_1, left=df_qa_choices_processed, on='qid')
 result.rename(columns={
     'A': 'a'
     , 'B': 'b'
@@ -252,14 +232,7 @@ result.rename(columns={
     , 'correct_answer': 'ans'
 }, inplace=True)
 result['marks'] = 1
-result['test_id'] = 14
-dict_qa.keys()
-# print(json.dumps(dict_qa[584], indent=4))
-result.columns
-
-result.iloc[582]
-
-
+result['test_id'] = 0
 result = result[[
     'test_id'
     , 'qid'
@@ -273,5 +246,16 @@ result = result[[
     , 'ans'
     , 'marks'
 ]]
+# result.to_csv('Questions_aws.csv', index=False)
 
-result.to_csv('Questions_aws.csv', index=False)
+test_id = 0
+for key, value in aws_services.items():
+    test_id += 1
+    path = os.path.join(os.getcwd(), 'sources', 'AWS - SAA-C03', key + '.csv')
+    # if not os.path.exists(path):
+    #     os.makedirs(path)
+    selections = [i-1 for i in value]
+    q = result.iloc[selections]
+    q['test_id'] = test_id
+    q.to_csv(path, index=False)
+

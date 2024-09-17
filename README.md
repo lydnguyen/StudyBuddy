@@ -45,3 +45,6 @@ Access the bot via the deeplink `https://t.me/{bot_username}` and start chatting
 ## run-on-aws-ec2-instance
 https://abhinand05.medium.com/run-any-executable-as-systemd-service-in-linux-21298674f66f
 https://snehalchaure.medium.com/running-an-application-as-a-service-with-systemctl-63a51dece4c5
+
+## Setup the database
+Study Buddy runs on a PostgresSQL database. To construct the database with prompt test data, use the files in ./StudyBuddy/database_ddl

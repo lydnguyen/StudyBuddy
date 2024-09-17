@@ -30,14 +30,14 @@ VALUES
   (5, 'AWS Certified Solutions Architect Associate', 1, 'Availablity & Scalability')
   ;
 
--- Insert test data for Questions
+-- Insert test data for Questions TODO: add marks
 CREATE TABLE accp.dim_question (
   QuestionID INT PRIMARY KEY,
-  QuizID INT REFERENCES accp.dim_quiz(QuizID),
+  QuizID INT REFERENCES accp.dim_quiz_multiple(QuizID),
   context VARCHAR(255),
   QuizHasMultipleAnswers BOOLEAN
 );
-INSERT INTO accp.dim_question (QuestionID, QuizID, context, QuizHasMultipleAnswers)
+INSERT INTO accp.dim_question (QuestionID, QuizID, context, QuizHasMultipleAnswers) -- add marks
 VALUES
   (1, 1, 'Question 1 for English - beginners', FALSE),
   (2, 1, 'Question 2 for English - beginners', FALSE),
@@ -132,7 +132,7 @@ VALUES
 CREATE TABLE accp.fact_answer (
   AnswerID INT PRIMARY KEY,
   ParticipantID VARCHAR(255) REFERENCES accp.dim_participant(ParticipantID),
-  QuizID INT REFERENCES accp.dim_quiz(QuizID),
+  QuizID INT REFERENCES accp.dim_quiz_multiple(QuizID),
   QuestionID INT REFERENCES accp.dim_question(QuestionID),
   quiz_question_option varchar REFERENCES accp.dim_option(quiz_question_option),
   record_answer_dt TIMESTAMP,
@@ -169,6 +169,6 @@ VALUES
 CREATE TABLE accp.fact_quizoption_selected (
   QuizSelectedID INT PRIMARY KEY,
   ParticipantID VARCHAR(255),
-  QuizID INT REFERENCES accp.dim_quiz(QuizID),
+  QuizID INT REFERENCES accp.dim_quiz_multiple(QuizID),
   selected_quiz_ts TIMESTAMP
 );

@@ -14,7 +14,8 @@ logging.basicConfig(
 class ListQuestionaire:
     def __init__(self):
         self.secret = Authenticate().get_secret()
-        self.host = self.secret['db_host']
+        self.host = self.secret['localhost']
+        # self.host = self.secret['db_host']
         self.dbname = self.secret['db_dev']
         self.port = int(os.environ.get("DB_PORT", 5432))
         self.username = self.secret['username']
@@ -112,7 +113,8 @@ class ListQuestionaire:
 class UpdateData:
     def __init__(self):
         self.secret = Authenticate().get_secret()
-        self.host = self.secret['db_host']
+        self.host = self.secret['localhost']
+        # self.host = self.secret['db_host']
         self.dbname = self.secret['db_dev']
         self.port = int(os.environ.get("DB_PORT", 5432))
         self.username = self.secret['username']
