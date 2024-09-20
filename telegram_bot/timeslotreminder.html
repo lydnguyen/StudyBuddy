@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Slot Reminder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        form input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        form button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        form button:hover {
+            background-color: #218838;
+        }
+
+        .reminder-list {
+            margin-top: 20px;
+        }
+
+        .reminder-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-left: 5px solid #28a745;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reminder-item span {
+            font-weight: bold;
+        }
+
+        .delete-button {
+            padding: 5px 10px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        /* Info box style */
+        .info-box {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            border-radius: 5px;
+        }
+
+        /* Confirm button style */
+        #confirm-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            display: block;
+            width: 100%;
+        }
+
+        #confirm-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Time Slot Reminder</h1>
+
+        <form id="reminder-form">
+            <!-- Days of the week selection (Checkboxes) -->
+            <label>Select Days of the Week:</label>
+            <div>
+                <label><input type="checkbox" class="day-of-week" value="Sunday"> Sunday</label>
+                <label><input type="checkbox" class="day-of-week" value="Monday"> Monday</label>
+                <label><input type="checkbox" class="day-of-week" value="Tuesday"> Tuesday</label>
+                <label><input type="checkbox" class="day-of-week" value="Wednesday"> Wednesday</label>
+                <label><input type="checkbox" class="day-of-week" value="Thursday"> Thursday</label>
+                <label><input type="checkbox" class="day-of-week" value="Friday"> Friday</label>
+                <label><input type="checkbox" class="day-of-week" value="Saturday"> Saturday</label>
+            </div>
+
+            <!-- Single date selection -->
+            <label for="reminder-date">Select a Date:</label>
+            <input type="date" id="reminder-date" required>
+
+            <!-- Time selection with Add button -->
+            <label for="reminder-time">Select Time:</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="time" id="reminder-time" required style="flex: 1;">
+                <button type="button" id="add-time-button">Add</button>
+            </div>
+        </form>
+
+        <!-- Reminder Info Box -->
+        <div class="info-box" id="info-box" style="display: none;">
+            <p>Added Reminders:</p>
+            <div id="reminder-list"></div>
+        </div>
+
+        <!-- Confirm button -->
+        <button id="confirm-button">Confirm</button>
+    </div>
+
+    <script>
+        const addTimeButton = document.getElementById('add-time-button');
+        const infoBox = document.getElementById('info-box');
+        const reminderList = document.getElementById('reminder-list');
+        const confirmButton = document.getElementById('confirm-button');
+        const reminders = [];
+
+        addTimeButton.addEventListener('click', function() {
+            // Get selected days
+            const selectedDays = Array.from(document.querySelectorAll('.day-of-week:checked')).map(day => day.value);
+            const reminderDate = document.getElementById('reminder-date').value;
+            const reminderTime = document.getElementById('reminder-time').value;
+
+            // Validate that at least one day and time is selected
+            if (selectedDays.length === 0 || !reminderTime || !reminderDate) {
+                alert("Please select at least one day, a date, and a time.");
+                return;
+            }
+
+            // Create reminder object
+            const reminder = {
+                id: Date.now(), // Unique ID for each reminder
+                days: selectedDays.join(', '),
+                time: reminderTime,
+                date: reminderDate
+            };
+
+            // Add the reminder to the reminders array
+            reminders.push(reminder);
+
+            // Update the info box with the added reminder
+            displayReminders();
+        });
+
+        function displayReminders() {
+            // Clear previous reminder list
+            reminderList.innerHTML = '';
+
+            reminders.forEach(reminder => {
+                // Create a reminder item div
+                const reminderItem = document.createElement('div');
+                reminderItem.classList.add('reminder-item');
+                reminderItem.innerHTML = `
+                    <span>Reminder for ${reminder.days} at ${reminder.time} on ${reminder.date}</span>
+                    <button class="delete-button" data-id="${reminder.id}">Delete</button>
+                `;
+
+                // Append the reminder item to the list
+                reminderList.appendChild(reminderItem);
+            });
+
+            // Show the info box
+            infoBox.style.display = 'block';
+
+            // Add delete functionality
+            addDeleteEventListeners();
+        }
+
+        function addDeleteEventListeners() {
+            const deleteButtons = document.querySelectorAll('.delete-button');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const reminderId = parseInt(this.getAttribute('data-id'));
+
+                    // Remove the reminder with the matching ID from the reminders array
+                    const reminderIndex = reminders.findIndex(reminder => reminder.id === reminderId);
+                    if (reminderIndex !== -1) {
+                        reminders.splice(reminderIndex, 1);
+                    }
+
+                    // Update the display
+                    displayReminders();
+                });
+            });
+        }
+
+        confirmButton.addEventListener('click', function() {
+            alert("Reminders confirmed!");
+            window.close(); // Close the window/page after confirming
+        });
+    </script>
+</body>
+</html>
