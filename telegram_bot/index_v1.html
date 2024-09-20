@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        .product {
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .product img {
+            max-width: 100px;
+            border-radius: 5px;
+        }
+        .product-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .product-info {
+            flex: 1;
+            padding-left: 10px;
+        }
+        .cart {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .cart-items {
+            list-style: none;
+            padding: 0;
+        }
+        .cart-items li {
+            padding: 5px 0;
+        }
+        .add-to-cart {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .add-to-cart:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Product Menu</h1>
+
+    <!-- Product List -->
+    <div class="product" data-name="Product 1" data-price="10.00">
+        <img src="https://via.placeholder.com/100" alt="Product 1">
+        <div class="product-details">
+            <div class="product-info">
+                <h3>Product 1</h3>
+                <p>$10.00</p>
+            </div>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+
+    <div class="product" data-name="Product 2" data-price="12.50">
+        <img src="https://via.placeholder.com/100" alt="Product 2">
+        <div class="product-details">
+            <div class="product-info">
+                <h3>Product 2</h3>
+                <p>$12.50</p>
+            </div>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+
+    <!-- Add more products similarly (up to 10 products) -->
+
+    <div class="product" data-name="Product 10" data-price="20.00">
+        <img src="https://via.placeholder.com/100" alt="Product 10">
+        <div class="product-details">
+            <div class="product-info">
+                <h3>Product 10</h3>
+                <p>$20.00</p>
+            </div>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+
+    <!-- Cart -->
+    <div class="cart">
+        <h2>Shopping Cart</h2>
+        <ul class="cart-items"></ul>
+        <p><strong>Total: $<span id="total-amount">0.00</span></strong></p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cartItemsList = document.querySelector('.cart-items');
+        const totalAmount = document.getElementById('total-amount');
+        let total = 0;
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const product = event.target.closest('.product');
+                const name = product.dataset.name;
+                const price = parseFloat(product.dataset.price);
+
+                // Add product to cart
+                const cartItem = document.createElement('li');
+                cartItem.textContent = `${name} - $${price.toFixed(2)}`;
+                cartItemsList.appendChild(cartItem);
+
+                // Update total amount
+                total += price;
+                totalAmount.textContent = total.toFixed(2);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
