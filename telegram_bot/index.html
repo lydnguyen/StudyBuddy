@@ -4,205 +4,141 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Menu</title>
+    <title>Planned Reminders</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: #f4f4f4;
         }
+
         .container {
-            width: 80%;
-            margin: 20px auto;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .product {
-            display: flex;
-            justify-content: space-between;
-            background-color: white;
-            padding: 15px;
+
+        h1 {
+            text-align: center;
+        }
+
+        .reminder-list {
+            margin-top: 20px;
+        }
+
+        .reminder-item {
+            padding: 10px;
             margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .product img {
-            max-width: 100px;
-            border-radius: 5px;
-        }
-        .product-details {
+            background-color: #f8f9fa;
+            border-left: 5px solid #28a745;
+            border-radius: 3px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 100%;
         }
-        .product-info {
-            flex: 1;
-            padding-left: 10px;
+
+        .reminder-item span {
+            font-weight: bold;
         }
-        .cart-container  {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .cart-items {
-            list-style: none;
-            padding: 0;
-        }
-        .cart-items li {
-            padding: 5px 0;
-        }
-        .cart-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        .cart-button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .cart-button.subtract {
+
+        .delete-button {
+            padding: 5px 10px;
             background-color: #dc3545;
-        }
-        .cart-button:hover {
-            opacity: 0.8;
-        }
-        .next-button {
-            background-color: #28a745;
             color: white;
             border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        .new-reminder-button {
+            margin-top: 20px;
             padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
+            width: 100%;
+            text-align: center;
         }
-        .next-button:hover {
-            background-color: #218838;
+
+        .new-reminder-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Planned Reminders</h1>
 
-<div class="container">
-    <h1>Product Menu</h1>
+        <div class="reminder-list" id="reminder-list"></div>
 
-
-    <!-- Product List -->
-    <div class="product" data-name="Product 1" data-price="10.00">
-        <img src="https://via.placeholder.com/100" alt="Product 1">
-        <div class="product-details">
-            <div class="product-info">
-                <h3>Product 1</h3>
-                <p>$10.00</p>
-            </div>
-            <button class="add-to-cart">Add to Cart</button>
-            <div class="cart-buttons" style="display:none;">
-                <button class="cart-button subtract">-</button>
-                <button class="cart-button add">+</button>
-            </div>
-        </div>
+        <button class="new-reminder-button" id="new-reminder-button">Create new reminder</button>
     </div>
 
-    <div class="product" data-name="Product 2" data-price="12.50">
-        <img src="https://via.placeholder.com/100" alt="Product 2">
-        <div class="product-details">
-            <div class="product-info">
-                <h3>Product 2</h3>
-                <p>$12.50</p>
-            </div>
-            <button class="add-to-cart">Add to Cart</button>
-            <div class="cart-buttons" style="display:none;">
-                <button class="cart-button subtract">-</button>
-                <button class="cart-button add">+</button>
-            </div>
-        </div>
-    </div>
+    <script>
+        const reminders = [
+            { id: 1, text: 'Meeting with team at 9:00 AM' },
+            { id: 2, text: 'Doctor appointment at 2:00 PM' },
+            { id: 3, text: 'Pick up groceries at 5:00 PM' },
+            { id: 4, text: 'Dinner with family at 7:00 PM' }
+        ];
 
-    <!-- Cart -->
-    <div class="cart-container">
-        <h2>Shopping Cart</h2>
-        <ul class="cart-items"></ul>
-        <p><strong>Total: $<span id="total-amount">0.00</span></strong></p>
-        <!-- Next button inside the cart -->
-    <button class="next-button" onclick="window.location.href='timeslotreminder.html'">Next</button>
-    </div>
-</div>
+        const reminderList = document.getElementById('reminder-list');
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const cartItemsList = document.querySelector('.cart-items');
-        const totalAmount = document.getElementById('total-amount');
-        let total = 0;
-        let cart = {};
+        // Function to display reminders
+        function displayReminders() {
+            reminderList.innerHTML = ''; // Clear existing reminders
 
-        function updateCart() {
-            cartItemsList.innerHTML = '';
-            total = 0;
-            for (const [name, item] of Object.entries(cart)) {
-                const cartItem = document.createElement('li');
-                cartItem.textContent = `${name} - $${(item.price * item.quantity).toFixed(2)} (${item.quantity}x)`;
-                cartItemsList.appendChild(cartItem);
-                total += item.price * item.quantity;
-            }
-            totalAmount.textContent = total.toFixed(2);
+            reminders.forEach(reminder => {
+                const reminderItem = document.createElement('div');
+                reminderItem.classList.add('reminder-item');
+                reminderItem.innerHTML = `
+                    <span>${reminder.text}</span>
+                    <button class="delete-button" data-id="${reminder.id}">Delete</button>
+                `;
+
+                reminderList.appendChild(reminderItem);
+            });
+
+            addDeleteEventListeners();
         }
 
-        document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const product = event.target.closest('.product');
-                const name = product.dataset.name;
-                const price = parseFloat(product.dataset.price);
+        // Function to add event listeners for delete buttons
+        function addDeleteEventListeners() {
+            const deleteButtons = document.querySelectorAll('.delete-button');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const reminderId = parseInt(this.getAttribute('data-id'));
 
-                // Initialize product in cart if not already added
-                if (!cart[name]) {
-                    cart[name] = { price: price, quantity: 1 };
-                } else {
-                    cart[name].quantity += 1;
-                }
-
-                // Replace "Add to Cart" button with +/- buttons
-                const cartButtons = product.querySelector('.cart-buttons');
-                event.target.style.display = 'none';
-                cartButtons.style.display = 'flex';
-
-                updateCart();
-            });
-        });
-
-        document.querySelectorAll('.cart-button.add').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const product = event.target.closest('.product');
-                const name = product.dataset.name;
-
-                cart[name].quantity += 1;
-                updateCart();
-            });
-        });
-
-        document.querySelectorAll('.cart-button.subtract').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const product = event.target.closest('.product');
-                const name = product.dataset.name;
-
-                if (cart[name].quantity > 0) {
-                    cart[name].quantity -= 1;
-                    if (cart[name].quantity === 0) {
-                        delete cart[name];
-                        const cartButtons = product.querySelector('.cart-buttons');
-                        const addToCartButton = product.querySelector('.add-to-cart');
-                        cartButtons.style.display = 'none';
-                        addToCartButton.style.display = 'inline-block';
+                    // Find and remove the reminder by id
+                    const reminderIndex = reminders.findIndex(r => r.id === reminderId);
+                    if (reminderIndex !== -1) {
+                        reminders.splice(reminderIndex, 1); // Remove from array
                     }
-                }
-                updateCart();
-            });
-        });
-    });
-</script>
 
+                    displayReminders(); // Refresh the display
+                });
+            });
+        }
+
+        // Event listener for the Create new reminder button
+        const newReminderButton = document.getElementById('new-reminder-button');
+        newReminderButton.addEventListener('click', function() {
+            alert("Create a new reminder!");
+            // Here you can add actual page navigation, e.g., window.location.href = 'timeslotreminder.html';
+        });
+
+        // Display the reminders initially
+        displayReminders();
+    </script>
 </body>
 </html>
