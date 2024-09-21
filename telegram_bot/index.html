@@ -81,7 +81,7 @@
 
         <div class="reminder-list" id="reminder-list"></div>
 
-        <button class="new-reminder-button" id="new-reminder-button">Create new reminder</button>
+        <button class="new-reminder-button" id="new-reminder-button" onclick="window.location.href='timeslotreminder.html'">Create new reminder</button>
     </div>
 
     <script>
@@ -129,13 +129,6 @@
                 });
             });
         }
-
-        // Event listener for the Create new reminder button
-        const newReminderButton = document.getElementById('new-reminder-button');
-        newReminderButton.addEventListener('click', function() {
-            alert("Create a new reminder!");
-            // Here you can add actual page navigation, e.g., window.location.href = 'timeslotreminder.html';
-        });
 
         // Display the reminders initially
         displayReminders();
