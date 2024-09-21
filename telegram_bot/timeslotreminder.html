@@ -36,10 +36,70 @@
             font-weight: bold;
         }
 
-        form input[type="checkbox"] {
+        /* Multi-select dropdown styles */
+        .dropdown-container {
+            position: relative;
+        }
+
+        .dropdown-container.open .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-button {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .dropdown-content label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .dropdown-content label input {
             margin-right: 10px;
         }
 
+        .dropdown-content label:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Day button styles */
+        .day-button {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+            background-color: #7a7a7a;
+            width: 100px;
+        }
+
+        .day-button.selected {
+            background-color: #28a745;
+            color: white;
+        }
+
+        /* Other form element styles */
         form button {
             padding: 10px 15px;
             border: none;
@@ -119,27 +179,41 @@
         <h1>Time Slot Reminder</h1>
 
         <form id="reminder-form">
+            <!-- Single date selection -->
+            <label for="reminder-date">Your reminder(s) will start today until:</label>
+            <input type="date" id="reminder-date" required>
 
-            <!-- Days of the week selection (Checkboxes) -->
-            <label>Select Days of the Week:</label>
-            <div>
-                <label><input type="checkbox" class="day-of-week" value="Sunday"> Sunday</label>
-                <label><input type="checkbox" class="day-of-week" value="Monday"> Monday</label>
-                <label><input type="checkbox" class="day-of-week" value="Tuesday"> Tuesday</label>
-                <label><input type="checkbox" class="day-of-week" value="Wednesday"> Wednesday</label>
-                <label><input type="checkbox" class="day-of-week" value="Thursday"> Thursday</label>
-                <label><input type="checkbox" class="day-of-week" value="Friday"> Friday</label>
-                <label><input type="checkbox" class="day-of-week" value="Saturday"> Saturday</label>
+            <!-- Multi-select product dropdown -->
+            <label>Select Products:</label>
+            <div class="dropdown-container">
+                <div class="dropdown-button">Select Products</div>
+                <div class="dropdown-content">
+                    <label><input type="checkbox" class="product-checkbox" value="Product 1"> Product 1</label>
+                    <label><input type="checkbox" class="product-checkbox" value="Product 2"> Product 2</label>
+                    <label><input type="checkbox" class="product-checkbox" value="Product 3"> Product 3</label>
+                    <label><input type="checkbox" class="product-checkbox" value="Product 4"> Product 4</label>
+                    <label><input type="checkbox" class="product-checkbox" value="Product 5"> Product 5</label>
+                </div>
             </div>
+
+            <!-- Days of the week selection (Inline buttons) -->
+            <label>Select Days of the Week for your reminder:</label>
+            <div id="day-buttons-container">
+                <button type="button" class="day-button" data-day="Sunday">Sunday</button>
+                <button type="button" class="day-button" data-day="Monday">Monday</button>
+                <button type="button" class="day-button" data-day="Tuesday">Tuesday</button>
+                <button type="button" class="day-button" data-day="Wednesday">Wednesday</button>
+                <button type="button" class="day-button" data-day="Thursday">Thursday</button>
+                <button type="button" class="day-button" data-day="Friday">Friday</button>
+                <button type="button" class="day-button" data-day="Saturday">Saturday</button>
+            </div>
+
             <!-- Time selection with Add button -->
-            <label for="reminder-time">Select Time:</label>
+            <label for="reminder-time">Select reminder(s):</label>
             <div style="display: flex; gap: 10px;">
                 <input type="time" id="reminder-time" required style="flex: 1;">
                 <button type="button" id="add-time-button">Add</button>
             </div>
-            <!-- Single date selection -->
-            <label for="reminder-date">Select the end date of your reminder:</label>
-            <input type="date" id="reminder-date" required>
         </form>
 
         <!-- Reminder Info Box -->
@@ -157,24 +231,71 @@
         const infoBox = document.getElementById('info-box');
         const reminderList = document.getElementById('reminder-list');
         const confirmCloseBtn = document.getElementById('confirm-close-btn');
+        const dayButtons = document.querySelectorAll('.day-button');
         const reminders = [];
+        const selectedDays = new Set();
+        const selectedProducts = new Set();
+
+        // Toggle day button selection
+        dayButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const day = this.getAttribute('data-day');
+
+                // Toggle 'selected' class
+                if (selectedDays.has(day)) {
+                    selectedDays.delete(day);
+                    this.classList.remove('selected');
+                } else {
+                    selectedDays.add(day);
+                    this.classList.add('selected');
+                }
+            });
+        });
+
+        // Toggle dropdown visibility
+        const dropdownButton = document.querySelector('.dropdown-button');
+        const dropdownContent = document.querySelector('.dropdown-content');
+        dropdownButton.addEventListener('click', function() {
+            this.parentNode.classList.toggle('open');
+        });
+
+        // Update selected products
+        const productCheckboxes = document.querySelectorAll('.product-checkbox');
+        productCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    selectedProducts.add(this.value);
+                } else {
+                    selectedProducts.delete(this.value);
+                }
+                updateDropdownButtonText();
+            });
+        });
+
+        function updateDropdownButtonText() {
+            if (selectedProducts.size > 0) {
+                dropdownButton.textContent = Array.from(selectedProducts).join(', ');
+            } else {
+                dropdownButton.textContent = 'Select Products';
+            }
+        }
 
         // Add reminder functionality
         addTimeButton.addEventListener('click', function() {
-            const selectedDays = Array.from(document.querySelectorAll('.day-of-week:checked')).map(day => day.value);
             const reminderDate = document.getElementById('reminder-date').value;
             const reminderTime = document.getElementById('reminder-time').value;
 
-            if (selectedDays.length === 0 || !reminderTime || !reminderDate) {
-                alert("Please select at least one day, a date, and a time.");
+            if (selectedDays.size === 0 || !reminderTime || !reminderDate || selectedProducts.size === 0) {
+                alert("Please select at least one product, day, date, and time.");
                 return;
             }
 
             const reminder = {
                 id: Date.now(),
-                days: selectedDays.join(', '),
+                days: Array.from(selectedDays).join(', '),
                 time: reminderTime,
-                date: reminderDate
+                date: reminderDate,
+                products: Array.from(selectedProducts).join(', ')
             };
 
             reminders.push(reminder);
@@ -188,7 +309,7 @@
                 const reminderItem = document.createElement('div');
                 reminderItem.classList.add('reminder-item');
                 reminderItem.innerHTML = `
-                    <span>Reminder for ${reminder.days} at ${reminder.time} on ${reminder.date}</span>
+                    <span>Reminder for ${reminder.products} on ${reminder.time} every ${reminder.days} starting today until ${reminder.date}</span>
                     <button class="delete-button" data-id="${reminder.id}">Delete</button>
                 `;
                 reminderList.appendChild(reminderItem);
