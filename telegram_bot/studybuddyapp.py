@@ -63,6 +63,7 @@ def main():
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler(['next_question', 'start_quiz'], qg.quiz))
     application.add_handler(CommandHandler(['choose_topic', 'switch_topic'], mo.switch_topic))
+    application.add_handler(CommandHandler(['set_quiz_reminder'], mo.switch_topic))
 
     option_info, level_info = ListQuestionaire().fetch_question_options()
     for i in option_info.values():
@@ -79,17 +80,17 @@ def main():
     # log all errors
     application.add_error_handler(error)
 
-    times = [
-        datetime.datetime.now() + datetime.timedelta(seconds=5)
-        , datetime.datetime.now() + datetime.timedelta(seconds=7)
-        , datetime.datetime.now() + datetime.timedelta(seconds=10)
-    ]
-    for time in times:
-        application.job_queue.run_daily(
-            callback=send_quiz_poll_scheduler
-            , time=time.astimezone()
-            , job_kwargs={'misfire_grace_time': 10}  # Adding grace time for misfire
-        )
+    # times = [
+    #     datetime.datetime.now() + datetime.timedelta(seconds=5)
+    #     , datetime.datetime.now() + datetime.timedelta(seconds=7)
+    #     , datetime.datetime.now() + datetime.timedelta(seconds=10)
+    # ]
+    # for time in times:
+    #     application.job_queue.run_daily(
+    #         callback=send_quiz_poll_scheduler
+    #         , time=time.astimezone()
+    #         , job_kwargs={'misfire_grace_time': 10}  # Adding grace time for misfire
+    #     )
 
     # Run the bot until user press Ctrl-C
     application.run_polling(allowed_updates=Update.ALL_TYPES)
