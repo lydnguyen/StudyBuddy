@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planned Reminders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .reminder-list {
+            margin-top: 20px;
+        }
+
+        .reminder-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-left: 5px solid #28a745;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reminder-item span {
+            font-weight: bold;
+        }
+
+        .delete-button {
+            padding: 5px 10px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        .new-reminder-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+
+        .new-reminder-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Planned Reminders</h1>
+
+        <div class="reminder-list" id="reminder-list"></div>
+
+        <button class="new-reminder-button" id="new-reminder-button" onclick="window.location.href='timeslotreminder.html'">Create new reminder</button>
+    </div>
+
+    <script>
+        const reminders = [
+            { id: 1, text: 'Meeting with team at 9:00 AM' },
+            { id: 2, text: 'Doctor appointment at 2:00 PM' },
+            { id: 3, text: 'Pick up groceries at 5:00 PM' },
+            { id: 4, text: 'Dinner with family at 7:00 PM' }
+        ];
+
+        const reminderList = document.getElementById('reminder-list');
+
+        // Function to display reminders
+        function displayReminders() {
+            reminderList.innerHTML = ''; // Clear existing reminders
+
+            reminders.forEach(reminder => {
+                const reminderItem = document.createElement('div');
+                reminderItem.classList.add('reminder-item');
+                reminderItem.innerHTML = `
+                    <span>${reminder.text}</span>
+                    <button class="delete-button" data-id="${reminder.id}">Delete</button>
+                `;
+
+                reminderList.appendChild(reminderItem);
+            });
+
+            addDeleteEventListeners();
+        }
+
+        // Function to add event listeners for delete buttons
+        function addDeleteEventListeners() {
+            const deleteButtons = document.querySelectorAll('.delete-button');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const reminderId = parseInt(this.getAttribute('data-id'));
+
+                    // Find and remove the reminder by id
+                    const reminderIndex = reminders.findIndex(r => r.id === reminderId);
+                    if (reminderIndex !== -1) {
+                        reminders.splice(reminderIndex, 1); // Remove from array
+                    }
+
+                    displayReminders(); // Refresh the display
+                });
+            });
+        }
+
+        // Display the reminders initially
+        displayReminders();
+    </script>
+</body>
+</html>
