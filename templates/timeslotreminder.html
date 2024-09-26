@@ -178,7 +178,7 @@
     <div class="container">
         <h1>Time Slot Reminder</h1>
 
-        <form id="reminder-form">
+        <form action="/submit" method="POST" id="reminder-form">
             <!-- Single date selection -->
             <label for="reminder-date">Your reminder(s) will start today until:</label>
             <input type="date" id="reminder-date" required>
@@ -188,11 +188,11 @@
             <div class="dropdown-container">
                 <div class="dropdown-button">Select Products</div>
                 <div class="dropdown-content">
-                    <label><input type="checkbox" class="product-checkbox" value="Product 1"> Product 1</label>
-                    <label><input type="checkbox" class="product-checkbox" value="Product 2"> Product 2</label>
-                    <label><input type="checkbox" class="product-checkbox" value="Product 3"> Product 3</label>
-                    <label><input type="checkbox" class="product-checkbox" value="Product 4"> Product 4</label>
-                    <label><input type="checkbox" class="product-checkbox" value="Product 5"> Product 5</label>
+                    <label><input type="checkbox" name="products" class="product-checkbox" value="Product 1"> Product 1</label>
+                    <label><input type="checkbox" name="products" class="product-checkbox" value="Product 2"> Product 2</label>
+                    <label><input type="checkbox" name="products" class="product-checkbox" value="Product 3"> Product 3</label>
+                    <label><input type="checkbox" name="products" class="product-checkbox" value="Product 4"> Product 4</label>
+                    <label><input type="checkbox" name="products" class="product-checkbox" value="Product 5"> Product 5</label>
                 </div>
             </div>
 
@@ -214,6 +214,10 @@
                 <input type="time" id="reminder-time" required style="flex: 1;">
                 <button type="button" id="add-time-button">Add</button>
             </div>
+
+            <!-- Confirm and Close button -->
+            <button type="submit" id="confirm-close-btn">Confirm and Close</button>
+
         </form>
 
         <!-- Reminder Info Box -->
@@ -222,8 +226,6 @@
             <div id="reminder-list"></div>
         </div>
 
-        <!-- Confirm and Close button -->
-        <button id="confirm-close-btn">Confirm and Close</button>
     </div>
 
     <script>

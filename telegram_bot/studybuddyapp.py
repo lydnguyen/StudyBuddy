@@ -4,6 +4,7 @@ import logging.config
 import os
 import datetime
 from _quiz_generator import send_quiz_poll_scheduler
+from flask import Flask, request, jsonify
 from _authentications import Authenticate
 from _access_source import ListQuestionaire
 import _quiz_generator as qg
@@ -55,8 +56,27 @@ async def start(update, context):
                                    reply_markup=keyboard,
                                    )
 
+app = Flask(__name__)
+
+
+@app.route('/submit', methods=['POST'])
+def submit_reminder():
+    reminders = request.json.get('reminders')
+    if reminders:
+        user_input = {
+            ''
+        }
+        message = ""
+        for reminder in reminders:
+            message += f"Reminder for {reminder['products']} on {reminder['time']} every {reminder['days']} until {reminder['date']}\n"
+
+        return jsonify({'status': 'success'}), 200
+    else:
+        return jsonify({'status': 'error', 'message': 'No reminders submitted'}), 400
+
 
 def main():
+    app.run(debug=True)
     # Create the Application and pass it your bot's token.
     application = Application.builder().token(DefaultConfig.TELEGRAM_TOKEN).build()
 
