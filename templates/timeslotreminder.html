@@ -156,7 +156,7 @@
         }
 
         /* Confirm and Close button style */
-        #confirm-close-btn {
+        #confirm-btn {
             margin-top: 20px;
             padding: 10px 20px;
             background-color: #28a745;
@@ -169,7 +169,7 @@
             width: 100%;
         }
 
-        #confirm-close-btn:hover {
+        #confirm-btn:hover {
             background-color: #218838;
         }
     </style>
@@ -178,10 +178,10 @@
     <div class="container">
         <h1>Time Slot Reminder</h1>
 
-        <form action="/submit" method="POST" id="reminder-form">
+        <form action="/submit" method="POST" id="reminder-form" name="reminder-form">
             <!-- Single date selection -->
-            <label for="reminder-date">Your reminder(s) will start today until:</label>
-            <input type="date" id="reminder-date" required>
+            <label for="reminder-date" >Your reminder(s) will start today until:</label>
+            <input type="date" id="reminder-date" name="reminder-date" required>
 
             <!-- Multi-select product dropdown -->
             <label>Select Products:</label>
@@ -208,15 +208,18 @@
                 <button type="button" class="day-button" data-day="Saturday">Saturday</button>
             </div>
 
+            <!-- Hidden input to store selected days of the week -->
+            <input type="hidden" id="day_week" name="day_week" value="">
+
             <!-- Time selection with Add button -->
             <label for="reminder-time">Select reminder(s):</label>
             <div style="display: flex; gap: 10px;">
-                <input type="time" id="reminder-time" required style="flex: 1;">
+                <input type="time" id="reminder-time" name="reminder-time" required style="flex: 1;">
                 <button type="button" id="add-time-button">Add</button>
             </div>
 
-            <!-- Confirm and Close button -->
-            <button type="submit" id="confirm-close-btn">Confirm and Close</button>
+            <!-- Confirm button -->
+            <button type="submit" id="confirm-btn">Confirm</button>
 
         </form>
 
@@ -232,8 +235,8 @@
         const addTimeButton = document.getElementById('add-time-button');
         const infoBox = document.getElementById('info-box');
         const reminderList = document.getElementById('reminder-list');
-        const confirmCloseBtn = document.getElementById('confirm-close-btn');
         const dayButtons = document.querySelectorAll('.day-button');
+        const dayweekInput = document.getElementById('day_week');
         const reminders = [];
         const selectedDays = new Set();
         const selectedProducts = new Set();
@@ -251,7 +254,15 @@
                     selectedDays.add(day);
                     this.classList.add('selected');
                 }
+
+                // Update hidden input with selected days
+                dayweekInput.value = Array.from(selectedDays).join(', ');
             });
+        });
+
+        // Form submit event (optional if handling selection differently)
+        document.getElementById('reminder-form').addEventListener('submit', function(event) {
+            dayweekInput.value = Array.from(selectedDays).join(', ');
         });
 
         // Toggle dropdown visibility
@@ -337,18 +348,6 @@
             });
         }
 
-        // Confirm and Close functionality
-        confirmCloseBtn.addEventListener('click', function() {
-            const confirmed = confirm("Are you sure you want to confirm and close the window?");
-
-            if (confirmed) {
-                window.close();
-
-                if (!window.closed) {
-                    alert("Window cannot be closed automatically. Please close the window manually.");
-                }
-            }
-        });
     </script>
 </body>
 </html>

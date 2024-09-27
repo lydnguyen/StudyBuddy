@@ -15,6 +15,16 @@ article.
 
 
 ## Setup
+## Setup environment variable
+- setup the environment variable: AWS_SECRET_NAME = AWS secret ARN (given)
+- remember to restart your console again afterward
+## Dependencies
+- Install the AWS CLI (https://docs.aws.amazon.com/cli/v1/userguide/install-windows.html)
+- Make sure to add the installation directory to your PATH
+- Configure your AWS user credentials
+```
+aws configure
+```
 
 Clone the repository
 
@@ -26,10 +36,6 @@ Create and *.env* file in the same folder as *StudyBuddy*.
 Install the packages in requirement.txt
 ```
 pip install -r requirements.txt
-```
-The *.env* file defines the environment variables. To set environment variable via windows commandline:
-```
-set TELEGRAM_TOKEN={your Telegram token}
 ```
 
 ## Run on Local
@@ -47,4 +53,13 @@ https://abhinand05.medium.com/run-any-executable-as-systemd-service-in-linux-212
 https://snehalchaure.medium.com/running-an-application-as-a-service-with-systemctl-63a51dece4c5
 
 ## Setup the database
-Study Buddy runs on a PostgresSQL database. To construct the database with prompt test data, use the files in ./StudyBuddy/database_ddl
+Study Buddy runs on a PostgresSQL database. 
+
+1. Install Postgres locally and create a database name dev
+2. To construct the database with prompt test data, use the files in ./StudyBuddy/database_ddl
+3. create a user for access towards the database
+```
+CREATE USER username WITH PASSWORD 'password';
+ALTER USER username WITH SUPERUSER;
+
+```
