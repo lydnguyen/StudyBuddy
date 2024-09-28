@@ -211,6 +211,9 @@
             <!-- Hidden input to store selected days of the week -->
             <input type="hidden" id="day_week" name="day_week" value="">
 
+            <!-- Hidden input to store all reminders -->
+            <input type="hidden" id="all_reminders" name="all_reminders" value="">
+
             <!-- Time selection with Add button -->
             <label for="reminder-time">Select reminder(s):</label>
             <div style="display: flex; gap: 10px;">
@@ -237,6 +240,7 @@
         const reminderList = document.getElementById('reminder-list');
         const dayButtons = document.querySelectorAll('.day-button');
         const dayweekInput = document.getElementById('day_week');
+        const allremindersInput = document.getElementById('all_reminders');
         const reminders = [];
         const selectedDays = new Set();
         const selectedProducts = new Set();
@@ -264,6 +268,12 @@
         document.getElementById('reminder-form').addEventListener('submit', function(event) {
             dayweekInput.value = Array.from(selectedDays).join(', ');
         });
+
+        // Add all reminders into hidden variable all_reminders
+        document.getElementById('reminder-form').addEventListener('submit', function(event) {
+            allremindersInput.value = JSON.stringify(reminders);  // Store reminders as a JSON string
+        });
+
 
         // Toggle dropdown visibility
         const dropdownButton = document.querySelector('.dropdown-button');

@@ -19,7 +19,8 @@ def submit():
     user_data = {
         "reminder-date": request.form.get('reminder-date'),
         "day_week": request.form.get('day_week'),
-        "reminder-time": request.form.get('reminder-time')
+        "reminder-time": request.form.get('reminder-time'),
+        "all_reminders": request.form.get('all_reminders')
     }
 
     # Get the checkbox values; we use getlist() to retrieve multiple checkbox values
@@ -30,6 +31,7 @@ def submit():
                 <p><strong>week days:</strong> {user_data['day_week']}</p>
                 <p><strong>Interests:</strong> {', '.join(interests) if interests else 'None'}</p>
                 <p><strong>reminder time:</strong> {user_data['reminder-time']}</p>
+                <p><strong>all_reminders:</strong> {user_data['all_reminders']}</p>
                 
                 <button id="close-btn">Close</button>
                 <br><br><a href="/">Go back to form</a>'''
