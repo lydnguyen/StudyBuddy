@@ -178,6 +178,8 @@
     <div class="container">
         <h1>Time Slot Reminder</h1>
 
+        <p id="chat-info"></p>
+
         <form action="/submit" method="POST" id="reminder-form" name="reminder-form">
             <!-- Single date selection -->
             <label for="reminder-date" >Your reminder(s) will start today until:</label>
@@ -369,6 +371,24 @@
                 }
             }
         });
+
+        // Retrieve the chatId
+        if (window.Telegram && window.Telegram.WebApp) {
+            // Retrieve initData from the Telegram WebApp object
+            const initData = window.Telegram.WebApp.initData;
+
+            // Optional: You can verify the integrity of initData using initDataUnsafe
+            const initDataUnsafe = window.Telegram.WebApp.initDataUnsafe;
+
+            // Get chat_id from the parsed initData
+            const chatId = initDataUnsafe?.user?.id; // or initDataUnsafe.chat.id if you're in a group
+
+            // Display chat_id in the mini app or use it in your application logic
+            document.getElementById("chat-info").innerText = `Chat ID: ${chatId}`;
+        } else {
+            // Fallback if Telegram WebApp is not available
+            document.getElementById("chat-info").innerText = "Telegram WebApp not available";
+        };
 
     </script>
 </body>
