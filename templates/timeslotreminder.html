@@ -156,7 +156,7 @@
         }
 
         /* Confirm and Close button style */
-        #confirm-btn {
+        #confirm-close-btn {
             margin-top: 20px;
             padding: 10px 20px;
             background-color: #28a745;
@@ -169,7 +169,7 @@
             width: 100%;
         }
 
-        #confirm-btn:hover {
+        #confirm-close-btn:hover {
             background-color: #218838;
         }
     </style>
@@ -222,7 +222,7 @@
             </div>
 
             <!-- Confirm button -->
-            <button type="submit" id="confirm-btn">Confirm</button>
+            <button type="submit" id="confirm-close-btn">Confirm & Close</button>
 
         </form>
 
@@ -241,6 +241,7 @@
         const dayButtons = document.querySelectorAll('.day-button');
         const dayweekInput = document.getElementById('day_week');
         const allremindersInput = document.getElementById('all_reminders');
+        const ConfirmCloseBtn = document.getElementById('confirm-close-btn');
         const reminders = [];
         const selectedDays = new Set();
         const selectedProducts = new Set();
@@ -357,6 +358,17 @@
                 });
             });
         }
+
+        // Close functionality
+        ConfirmCloseBtn.addEventListener('click', function() {
+            const confirmed = confirm("Are you sure you want to confirm and close the window?");
+            if (confirmed) {
+                window.close();
+                if (!window.closed) {
+                    alert("Window cannot be closed automatically. Please close the window manually.");
+                }
+            }
+        });
 
     </script>
 </body>
