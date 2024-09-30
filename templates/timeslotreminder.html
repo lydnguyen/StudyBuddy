@@ -247,6 +247,7 @@
         const reminders = [];
         const selectedDays = new Set();
         const selectedProducts = new Set();
+        const chatId = "";
 
         // Retrieve the chatId
         if (window.Telegram && window.Telegram.WebApp) {
@@ -292,11 +293,7 @@
 
         // Add all reminders into hidden variable all_reminders
         document.getElementById('reminder-form').addEventListener('submit', function(event) {
-            const fullUserInfo = {
-                telegram_chat_id: chatId,
-                reminders: reminders
-            }
-            allremindersInput.value = JSON.stringify(fullUserInfo);  // Store reminders as a JSON string
+            allremindersInput.value = JSON.stringify(reminders);  // Store reminders as a JSON string
         });
 
 
