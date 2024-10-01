@@ -183,20 +183,18 @@
         <form action="/submit" method="POST" id="reminder-form" name="reminder-form">
             <!-- Single date selection -->
             <label for="reminder-date" >Your reminder(s) will start today until:</label>
-            <input type="date" id="reminder-date" name="reminder-date" required>
+            <input type="date" id="reminder-date" name="reminder-date" required><br>
 
             <!-- Multi-select product dropdown -->
-            <label>Select Products:</label>
+            <label>Select Topics for your reminder:</label>
             <div class="dropdown-container">
-                <div class="dropdown-button">Select Products</div>
+                <div class="dropdown-button">Select Topics</div>
                 <div class="dropdown-content">
-                    <label><input type="checkbox" name="products" class="product-checkbox" value="Product 1"> Product 1</label>
-                    <label><input type="checkbox" name="products" class="product-checkbox" value="Product 2"> Product 2</label>
-                    <label><input type="checkbox" name="products" class="product-checkbox" value="Product 3"> Product 3</label>
-                    <label><input type="checkbox" name="products" class="product-checkbox" value="Product 4"> Product 4</label>
-                    <label><input type="checkbox" name="products" class="product-checkbox" value="Product 5"> Product 5</label>
+                    {% for topic in topics %}
+                        <label><input type="checkbox" name="products" class="product-checkbox" value="{{ topic }}"> {{ topic }}</label><br>
+                    {% endfor %}
                 </div>
-            </div>
+            </div><br>
 
             <!-- Days of the week selection (Inline buttons) -->
             <label>Select Days of the Week for your reminder:</label>

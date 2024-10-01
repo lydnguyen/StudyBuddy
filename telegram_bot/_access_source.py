@@ -121,6 +121,7 @@ class UpdateData:
         self.password = self.secret['password']
 
     def insert_users_quiz_optionlevel(self, quizid, userid):
+        """ Updates user's option selected """
         con = psycopg2.connect(host=self.host
                                , database=self.dbname
                                , port=self.port
@@ -136,6 +137,29 @@ class UpdateData:
         else:
             quizselected_id += 1
         sql = f"INSERT INTO accp.fact_quizoption_selected (quizselectedid, participantid, quizid, selected_quiz_ts) VALUES ({quizselected_id}, {userid}, {quizid}, '{selected_quiz_ts}')"
+        cursor.execute(sql)
+        cursor.close()
+        con.commit()
+        con.close()
+
+    def insert_into_dim_quiz_multiple_tb(self, rows):
+        """ Update input data for the table dim_quiz_multiple"""
+        con = psycopg2.connect(host=self.host
+                               , database=self.dbname
+                               , port=self.port
+                               , user=self.username
+                               , password=self.password
+                               )
+        cursor = con.cursor()
+        sql = ("INSERT INTO accp.dim_quiz_multiple(QuizID, Quiztopic, Quizdifficulty, Quizlevel) VALUES "
+               "(1, 'English', 1, 'beginners')"
+               ", (2, 'English', 2, 'intermediate')"
+               ", (3, 'Math', 2, 'intermediate')"
+               ", (4, 'Math', 3, 'advanced')"
+               ", (5, 'AWS Certified Solutions Architect Associate'"
+               ", 1, 'Availablity & Scalability')"
+               ";")
+
         cursor.execute(sql)
         cursor.close()
         con.commit()

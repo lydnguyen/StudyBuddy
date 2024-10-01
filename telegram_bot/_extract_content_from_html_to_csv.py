@@ -145,6 +145,28 @@ aws_services = {
     , 'AWS X-Ray': []
 }
 
+curriculum =\
+    {
+        'IAM & AWS CLI': ['IAM', 'CLI', 'policies', 'roles', 'control tower', 'Directory']
+        , 'EC2': ['EC2', 'private', 'public', 'elastic', 'ENI', 'EBS', 'AMI', 'EFS']
+        , 'High Availablity & Scalability': ['ELB', 'ASG', 'NLB', 'GWLB', 'sticky sessions', 'cross zone load balancing', 'SSL', 'connection draining', 'scaling policy']
+        , 'RDS + Aurora + ElastiCache': ['RDS', 'Aurora', 'ElastiCache']
+        , 'Route 53': ['DNS', 'Route 53', 'TTL', 'CNAME', 'ALIAS', 'Route policy']
+        , 'S3': ['S3', 'Glacier']
+        , 'CloudFront & AWS Global Accelerator': ['Cloudfront', 'Global Accelerator']
+        , 'AWS Storage Extras': ['Snow', 'FSx', 'Storage Gateway', 'Transfer Family', 'DataSync']
+        , 'Decoupling applications': ['SQS', 'SNS', 'Kinesis', 'ActiveMQ', 'MQ', 'queues']
+        , 'Containers on AWS': ['ECS', 'Fargate', 'ECR', 'EKS', 'AWS App Runner']
+        , 'Serverless Solutions': ['Lambda', 'DynamoDB', 'Step Functions', 'Amazon Cognito']
+        , 'Databases in AWS': ['RDS', 'Aurora', 'ElastiCache', 'DynamoDB', 'S3', 'DocumentDB', 'Neptune', 'Keyspaces', 'QLDB', 'Timestream']
+        , 'Data & Analytics': ['Athena', 'Redshift', 'OpenSearch', 'EMR', 'QuickSight', 'Glue', 'Kinesis', 'MSK', 'Big Data']
+        , 'Machine Learning': ['Rekognition', 'Transcribe', 'Polly', 'Translate', 'Lex', 'Connect', 'Comprehend', 'Sagemaker', 'Forecast', 'Kendra', 'Personalize', 'Textract']
+        , 'AWS Monitor & Audit': ['Monitoring', 'CloudWatch', 'EventBridge', 'CloudTrail', 'Config']
+        , 'AWS Security & Encryption': ['Security', 'Encryption', 'KMS', 'Encrypt', 'SSM', 'Secret Manager', 'Certificate', 'ACM', 'WAF', 'Shield', 'Firewall', 'DDoS protection', 'GuardDuty', 'Inspector', 'Macie']
+        , 'Networking VPC': ['CIDR', 'Private', 'Public', 'VPC', 'Subnet', 'Internet Gateways', 'Route tables', 'Bastion Hosts', 'NAT', 'NACL', 'VPN', ' Site to site', 'Gateway', 'Direct Connect', 'Transit', 'IPv6', 'Egress', 'Network']
+        , 'Disaster Recovery & Migration': ['Disaster', 'Migration', 'DMS', 'MGN', 'VMware']
+        , 'Other AWS services': ['CloudFormation', 'SES', 'Pinpoint', 'SSM', 'Session Manager', 'Cost Explorer', 'Cost Anomaly Detection', 'AWS BAtch', 'Appflow', 'Amplify']
+    }
 
 def find_aws_services(text):
     regex = r'(?:Amazon|AWS)\s\b[\w-]+\b'

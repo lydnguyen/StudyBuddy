@@ -11,7 +11,9 @@ def form():
     with open(html_file,'r') as f:
         html = f.read()
         f.close()
-    return render_template_string(html)
+
+    topics = ['AWS 1', 'AWS 2', 'AWS 3', 'AWS 4']
+    return render_template_string(html, topics=topics)
 
 
 @app.route('/submit', methods=['POST'])
