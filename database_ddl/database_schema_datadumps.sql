@@ -1,18 +1,20 @@
 create schema accp ;
 -- Insert test data for Participants
---drop table dim_participant cascade;
+drop table accp.dim_participant cascade;
 CREATE TABLE accp.dim_participant (
   ParticipantID VARCHAR(255) PRIMARY KEY,
+  Telegram_chatid BIGINT,
   Username VARCHAR(255),
   Email VARCHAR(255),
   Created_dt TIMESTAMP,
   last_login_dt TIMESTAMP
 );
-INSERT INTO accp.dim_participant (ParticipantID, Username, Email, Created_dt, last_login_dt)
+INSERT INTO accp.dim_participant (ParticipantID, Telegram_chatid, Username, Email, Created_dt, last_login_dt)
 VALUES
-  ('1', 'Participant1', 'participant1@example.com', '2023-01-01', '2023-11-23'),
-  ('2', 'Participant2', 'participant2@example.com', '2023-01-02', '2023-11-23'),
-  ('3', 'Participant3', 'participant3@example.com', '2023-01-03', '2023-11-23'),
+  ('1', 23,'Participant1', 'participant1@example.com', '2023-01-01', '2023-11-23'),
+  ('2', 43,'Participant2', 'participant2@example.com', '2023-01-02', '2023-11-23'),
+  ('3', 456,'Participant3', 'participant3@example.com', '2023-01-03', '2023-11-23'),
+  ('4', 6261265168,'Lan', 'lan@example.com', '2023-01-03', '2023-11-23'),
 
 -- Insert test data for dim_quiz_multiple
 CREATE TABLE accp.dim_quiz_multiple (
@@ -172,3 +174,41 @@ CREATE TABLE accp.fact_quizoption_selected (
   QuizID INT REFERENCES accp.dim_quiz_multiple(QuizID),
   selected_quiz_ts TIMESTAMP
 );
+
+
+CREATE TABLE accp.fact_has_accessright_topic (
+    ID INT PRIMARY KEY,
+    quizID INT REFERENCES accp.dim_quiz_multiple(QuizID),
+    participantID VARCHAR(255) REFERENCES accp.dim_participant(participantid),
+    valid_from TIMESTAMP,
+    valid_until TIMESTAMP
+);
+
+INSERT INTO accp.fact_has_accessright_topic (ID, quizID, participantID, valid_from, valid_until )
+VALUES
+    (1, 1, 1, '2023-11-08', '2024-11-08'),
+    (2, 2, 1, '2023-11-08', '2024-11-08'),
+    (3, 3, 1, '2023-11-08', '2024-11-08'),
+    (4, 5, 2, '2023-11-08', '2024-11-08'),
+    (5, 1367, 2, '2023-11-08', '2024-11-08'),
+    (6, 8941, 2, '2023-11-08', '2024-11-08'),
+    (7, 8941, 4, '2023-11-08', '2024-11-08'),
+    (8, 1367, 4, '2023-11-08', '2024-11-08'),
+    (9, 630, 4, '2023-11-08', '2024-11-08'),
+    (10, 9651, 4, '2023-11-08', '2024-11-08'),
+    (11, 589, 4, '2023-11-08', '2024-11-08'),
+    (12, 7471, 4, '2023-11-08', '2024-11-08'),
+    (13, 8941, 4, '2023-11-08', '2024-11-08'),
+    (14, 8323, 4, '2023-11-08', '2024-11-08'),
+    (15, 2539, 4, '2023-11-08', '2024-11-08'),
+    (16, 7782, 4, '2023-11-08', '2024-11-08'),
+    (17, 8216, 4, '2023-11-08', '2024-11-08'),
+    (18, 7345, 4, '2023-11-08', '2024-11-08'),
+    (19, 5010, 4, '2023-11-08', '2024-11-08'),
+    (20, 1583, 4, '2023-11-08', '2024-11-08'),
+    (21, 723, 4, '2023-11-08', '2024-11-08'),
+    (22, 5218, 4, '2023-11-08', '2024-11-08'),
+    (23, 3366, 4, '2023-11-08', '2024-11-08'),
+    (24, 8725, 4, '2023-11-08', '2024-11-08'),
+    (25, 850, 4, '2023-11-08', '2024-11-08'),
+    (26, 8430, 4, '2023-11-08', '2024-11-08')

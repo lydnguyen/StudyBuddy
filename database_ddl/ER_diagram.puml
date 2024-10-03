@@ -12,6 +12,15 @@ entity dim_participant {
   *last_login_dt: datetime
 }
 
+entity fact_has_accessright_topic {
+    id: int <<pk>>
+    quizid: int <<fk>>
+    participantid: string <<fk>>
+    --
+    valid_from: datetime
+    valid_until: datetime
+}
+
 entity dim_quiz_multiple {
   *quizid: int <<pk>>
   --
@@ -58,12 +67,15 @@ entity fact_quizoption_selected {
 }
 
 
+
 dim_quiz_multiple ||--o{ dim_question
 dim_quiz_multiple ||--o{ fact_answer
 dim_quiz_multiple ||--|{ fact_quizoption_selected
+dim_quiz_multiple ||--o{ fact_has_accessright_topic
 dim_question ||--|{ dim_option
 dim_participant |o--o{ fact_answer
 dim_participant ||--o{ fact_quizoption_selected
+dim_participant ||--o{ fact_has_accessright_topic
 fact_answer }|--|| dim_question
 fact_answer }o--|| dim_option
 

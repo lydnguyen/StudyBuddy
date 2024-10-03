@@ -1,4 +1,7 @@
 import os
+
+from psycopg2.errorcodes import UNIQUE_VIOLATION
+
 from _authentications import Authenticate
 import psycopg2
 # from telegram_bot._authentications import Authenticate
@@ -151,19 +154,17 @@ class UpdateData:
                                , password=self.password
                                )
         cursor = con.cursor()
-        sql = ("INSERT INTO accp.dim_quiz_multiple(QuizID, Quiztopic, Quizdifficulty, Quizlevel) VALUES "
-               "(1, 'English', 1, 'beginners')"
-               ", (2, 'English', 2, 'intermediate')"
-               ", (3, 'Math', 2, 'intermediate')"
-               ", (4, 'Math', 3, 'advanced')"
-               ", (5, 'AWS Certified Solutions Architect Associate'"
-               ", 1, 'Availablity & Scalability')"
-               ";")
+        sql = "INSERT INTO accp.dim_quiz_multiple(QuizID, Quiztopic, Quizdifficulty, Quizlevel) VALUES " + rows + ";"
+        try:
+            cursor.execute(sql)
+        except UNIQUE_VIOLATION as e:
+            logging.error(e)
 
-        cursor.execute(sql)
         cursor.close()
         con.commit()
         con.close()
+
+        logging.info("Submit data into table dim_quiz_multiple successfully")
 
 option_info, level_info = ListQuestionaire().fetch_question_options()
 # import json
