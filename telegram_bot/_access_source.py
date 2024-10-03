@@ -188,7 +188,7 @@ class GetData:
         cursor = con.cursor()
         if userid is None:
             userid = 23
-        sql = f'''select distinct quizid, quiztopic, quizlevel
+        sql = f'''select distinct q.quizid, quiztopic, quizlevel
                     from accp.dim_quiz_multiple q 
                     inner join accp.fact_has_accessright_topic a 
                         on q.quizid = a.quizid
