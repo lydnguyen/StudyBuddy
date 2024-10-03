@@ -67,7 +67,7 @@ class ListQuestionaire:
 
     def fetch_question_options(self):
         cursor = self.con.cursor()
-        cursor.execute("select quizid, Quiztopic as quiz_topic , Quizlevel as quiz_level from accp.dim_quiz_multiple;")
+        cursor.execute("select quizid, Quiztopic as quiz_topic , Quizlevel as quiz_level from accp.dim_quiz_multiple;") #TODO: Need to integrate the accessright_topic table
         result = pd.DataFrame(cursor.fetchall(), columns=['quizid', 'quiz_topic', 'quiz_level'])
         cursor.close()
 
@@ -166,7 +166,46 @@ class UpdateData:
 
         logging.info("Submit data into table dim_quiz_multiple successfully")
 
-option_info, level_info = ListQuestionaire().fetch_question_options()
+
+class GetData:
+    def __init__(self):
+        self.secret = Authenticate().get_secret()
+        self.host = self.secret['localhost']
+        # self.host = self.secret['db_host']
+        self.dbname = self.secret['db_dev']
+        self.port = int(os.environ.get("DB_PORT", 5432))
+        self.username = self.secret['username']
+        self.password = self.secret['password']
+
+    def gettopicsbyrights(self, userid):
+        """ Updates user's option selected """
+        con = psycopg2.connect(host=self.host
+                               , database=self.dbname
+                               , port=self.port
+                               , user=self.username
+                               , password=self.password
+                               )
+        cursor = con.cursor()
+        if userid is None:
+            userid = 23
+        sql = f'''select distinct quizid, quiztopic, quizlevel
+                    from accp.dim_quiz_multiple q 
+                    inner join accp.fact_has_accessright_topic a 
+                        on q.quizid = a.quizid
+                    inner join accp.dim_participant p
+                        on p.participantid = a.participantid
+                    where p.telegram_chatid = {userid}
+                    and current_date between a.valid_from and a.valid_until
+                    ;'''
+        cursor.execute(sql)
+        result = pd.DataFrame(cursor.fetchall(), columns=['quizid', 'quiztopic', 'quizlevel'])
+        cursor.close()
+        con.commit()
+        con.close()
+
+        return result
+
+# option_info, level_info = ListQuestionaire().fetch_question_options()
 # import json
 # print(json.dumps(option_info, indent=4))
 # print(json.dumps(level_dict, indent=4))

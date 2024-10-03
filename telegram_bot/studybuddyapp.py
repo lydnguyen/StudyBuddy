@@ -45,7 +45,7 @@ class DefaultConfig:
 
 
 async def start(update, context):
-    reply_keyboard = [["/start_quiz", "/switch_topic"]]
+    reply_keyboard = [["/start_quiz", "/switch_topic", "/set_quiz_reminder"]]
     keyboard = ReplyKeyboardMarkup(reply_keyboard
                                    , one_time_keyboard=False
                                    , resize_keyboard=True

@@ -1,8 +1,15 @@
 from flask import Flask, request, render_template_string, jsonify
 import os
 import json
+from _access_source import GetData
+
 
 app = Flask(__name__)
+
+def get_topics_display_by_userid(userid):
+    parser = GetData()
+    return parser.gettopicsbyrights(userid)
+
 
 # Route to display the HTML form
 @app.route('/')
@@ -12,8 +19,10 @@ def form():
         html = f.read()
         f.close()
 
-    topics = ['AWS 1', 'AWS 2', 'AWS 3', 'AWS 4']
-    return render_template_string(html, topics=topics)
+    userid = request.form.get('chat-info')
+    topics = get_topics_display_by_userid(userid)
+    displaylevels = topics.quizlevel.values.tolist()
+    return render_template_string(html, topics=displaylevels)
 
 
 @app.route('/submit', methods=['POST'])
