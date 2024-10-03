@@ -20,6 +20,7 @@ def form():
         f.close()
 
     userid = request.form.get('chat-info')
+    print(userid)
     topics = get_topics_display_by_userid(userid)
     displaylevels = topics.quizlevel.values.tolist()
     return render_template_string(html, topics=displaylevels)
