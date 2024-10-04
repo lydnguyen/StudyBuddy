@@ -10,7 +10,6 @@ def get_topics_display_by_userid(userid):
     parser = GetData()
     return parser.gettopicsbyrights(userid)
 
-
 # Route to display the HTML form
 @app.route('/')
 def form():
@@ -18,13 +17,14 @@ def form():
     with open(html_file,'r') as f:
         html = f.read()
         f.close()
+    return render_template_string(html)
 
-    userid = request.form.get('chat-info')
-    print(userid)
+@app.route('/get_topics', methods=['POST'])
+def get_topics():
+    # Get the chat ID sent from the frontend
+    userid = request.form.get('chat_id')
     topics = get_topics_display_by_userid(userid)
-    displaylevels = topics.quizlevel.values.tolist()
-    return render_template_string(html, topics=displaylevels)
-
+    return jsonify(topics)
 
 @app.route('/submit', methods=['POST'])
 def submit():

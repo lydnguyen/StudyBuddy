@@ -189,10 +189,8 @@
             <label>Select Topics for your reminder:</label>
             <div class="dropdown-container">
                 <div class="dropdown-button">Select Topics</div>
-                <div class="dropdown-content">
-                    {% for topic in topics %}
-                        <label><input type="checkbox" name="products" class="product-checkbox" value="{{ topic }}"> {{ topic }}</label><br>
-                    {% endfor %}
+                <div class="dropdown-content" id="topic-checkboxes">
+                    <!-- Checkboxes will be populated here -->
                 </div>
             </div><br>
 
@@ -245,6 +243,9 @@
         const reminders = [];
         const selectedDays = new Set();
         const selectedProducts = new Set();
+        const dropdownButton = document.querySelector('.dropdown-button');
+        const dropdownContent = document.querySelector('.dropdown-content');
+        const chatInfoElement = document.getElementById("chat-info");
         const chatId = "";
 
         // Retrieve the chatId
@@ -294,10 +295,52 @@
             allremindersInput.value = JSON.stringify(reminders);  // Store reminders as a JSON string
         });
 
+        // Fetch chatId from Telegram WebApp
+        if (window.Telegram && window.Telegram.WebApp) {
+            const initDataUnsafe = window.Telegram.WebApp.initDataUnsafe;
+            const chatId = initDataUnsafe?.user?.id;
+
+            // Display chat ID in the HTML
+            chatInfoElement.innerText = `Chat ID: ${chatId}`;
+
+            // Send chat ID to Flask backend on page load
+            window.onload = function() {
+                if (chatId) {
+                    fetchTopicsFromBackend(chatId);
+                }
+            };
+        } else {
+            chatInfoElement.innerText = "Telegram WebApp not available";
+        }
+
+        // Function to send chat ID and receive topics from the backend
+        function fetchTopicsFromBackend(chatId) {
+            $.ajax({
+                type: 'POST',
+                url: '/get_topics',  // Flask backend route
+                data: { chat_id: chatId },
+                success: function(response) {
+                    populateTopicCheckboxes(response);
+                },
+                error: function(error) {
+                    console.log("Error fetching topics:", error);
+                }
+            });
+        }
+
+        // Function to dynamically populate checkboxes with topics
+        function populateTopicCheckboxes(topics) {
+            const topicContainer = document.getElementById("topic-checkboxes");
+            topicContainer.innerHTML = '';  // Clear existing checkboxes if any
+
+            topics.forEach(topic => {
+                const label = document.createElement('label');
+                label.innerHTML = `<input type="checkbox" name="products" class="product-checkbox" value="${topic}"> ${topic}`;
+                topicContainer.appendChild(label);
+            });
+        }
 
         // Toggle dropdown visibility
-        const dropdownButton = document.querySelector('.dropdown-button');
-        const dropdownContent = document.querySelector('.dropdown-content');
         dropdownButton.addEventListener('click', function() {
             this.parentNode.classList.toggle('open');
         });
