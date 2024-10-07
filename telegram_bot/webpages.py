@@ -23,7 +23,7 @@ def form():
 @app.route('/get_topics', methods=['POST'])
 def get_topics():
     # Get the chat ID sent from the frontend
-    userid = request.form.get('chat_id')
+    userid = request.form.get('chat-info')
     print(f"Received userid: {userid}")  # Log the received user id
     if userid is None or userid=='':
         userid = '23'
