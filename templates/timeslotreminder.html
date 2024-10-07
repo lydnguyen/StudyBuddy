@@ -262,6 +262,10 @@
 
             // Display chat_id in the mini app or use it in your application logic
             document.getElementById("chat-info").innerText = `Chat ID: ${chatId}`;
+
+            // Send chat ID to Flask backend on page load
+            window.onload = fetchTopicsFromBackend(chatId);
+            console.log("Windows on load should fetch topics for: ", chatId);
         } else {
             // Fallback if Telegram WebApp is not available
             document.getElementById("chat-info").innerText = "Telegram WebApp not available";
@@ -296,23 +300,8 @@
             allremindersInput.value = JSON.stringify(reminders);  // Store reminders as a JSON string
         });
 
-        // Fetch chatId from Telegram WebApp
-        if (window.Telegram && window.Telegram.WebApp) {
-            const initDataUnsafe = window.Telegram.WebApp.initDataUnsafe;
-            const chatId = initDataUnsafe?.user?.id;
-
-            // Display chat ID in the HTML
-            chatInfoElement.innerText = `Chat ID: ${chatId}`;
-
-            // Send chat ID to Flask backend on page load
-            window.onload = fetchTopicsFromBackend();
-            console.log("Windows on load should fetch topics for: ", chatId);
-        } else {
-            chatInfoElement.innerText = "Telegram WebApp not available";
-        }
-
         // Function to send chat ID and receive topics from the backend
-        function fetchTopicsFromBackend() {
+        function fetchTopicsFromBackend(chatId) {
             console.log("Chat ID being sent to backend: ", chatId);
             $.ajax({
                 type: 'POST',
