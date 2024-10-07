@@ -304,22 +304,21 @@
             chatInfoElement.innerText = `Chat ID: ${chatId}`;
 
             // Send chat ID to Flask backend on page load
-            window.onload = function() {
-                if (chatId) {
-                    fetchTopicsFromBackend(chatId);
-                }
-            };
+            window.onload = fetchTopicsFromBackend();
+            console.log("Windows on load should fetch topics for: ", chatId);
         } else {
             chatInfoElement.innerText = "Telegram WebApp not available";
         }
 
         // Function to send chat ID and receive topics from the backend
-        function fetchTopicsFromBackend(chatId) {
+        function fetchTopicsFromBackend() {
+            console.log("Chat ID being sent to backend: ", chatId);
             $.ajax({
                 type: 'POST',
                 url: '/get_topics',  // Flask backend route
                 data: { chat_id: chatId },
                 success: function(response) {
+                    console.log("Topics received: ", response); // Add this line to see the response
                     populateTopicCheckboxes(response);
                 },
                 error: function(error) {

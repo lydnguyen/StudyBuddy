@@ -8,7 +8,9 @@ app = Flask(__name__)
 
 def get_topics_display_by_userid(userid):
     parser = GetData()
-    return parser.gettopicsbyrights(userid)
+    topics = parser.gettopicsbyrights(userid)
+    print(f"--  Topics fetched for user {userid}: {topics}")  # Log the topics fetched from GetData
+    return topics
 
 # Route to display the HTML form
 @app.route('/')
@@ -23,7 +25,11 @@ def form():
 def get_topics():
     # Get the chat ID sent from the frontend
     userid = request.form.get('chat_id')
+    print(f"Received userid: {userid}")  # Log the received user id
+    if userid is None:
+        userid = 23
     topics = get_topics_display_by_userid(userid)
+    print(f"Topics returned for userid {userid}: {topics}")  # Log the fetched topics
     return jsonify(topics)
 
 @app.route('/submit', methods=['POST'])

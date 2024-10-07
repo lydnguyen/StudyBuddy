@@ -186,8 +186,6 @@ class GetData:
                                , password=self.password
                                )
         cursor = con.cursor()
-        if userid is None:
-            userid = 23
         logging.info(f'Get topic levels display for user {userid}')
         sql = f'''select distinct q.quizid, quiztopic, quizlevel
                     from accp.dim_quiz_multiple q 
