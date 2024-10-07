@@ -327,24 +327,24 @@
                 label.innerHTML = `<input type="checkbox" name="products" class="product-checkbox" value="${topic}"> ${topic}`;
                 topicContainer.appendChild(label);
             });
+
+            // Update selected products
+            const productCheckboxes = document.querySelectorAll('.product-checkbox');
+            productCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        selectedProducts.add(this.value);
+                    } else {
+                        selectedProducts.delete(this.value);
+                    }
+                    updateDropdownButtonText();
+                });
+            });
         }
 
         // Toggle dropdown visibility
         dropdownButton.addEventListener('click', function() {
             this.parentNode.classList.toggle('open');
-        });
-
-        // Update selected products
-        const productCheckboxes = document.querySelectorAll('.product-checkbox');
-        productCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    selectedProducts.add(this.value);
-                } else {
-                    selectedProducts.delete(this.value);
-                }
-                updateDropdownButtonText();
-            });
         });
 
         function updateDropdownButtonText() {
