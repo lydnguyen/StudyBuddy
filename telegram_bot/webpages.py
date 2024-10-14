@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template_string, jsonify
 import os
 import json
-from telegram_bot._access_source import GetData
+from _access_source import GetData
 
 
 app = Flask(__name__)
