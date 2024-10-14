@@ -14,7 +14,7 @@ def get_topics_display_by_userid(userid):
 # Route to display the HTML form
 @app.route('/')
 def form():
-    html_file = os.path.join(os.getcwd(), 'templates', 'timeslotreminder.html')
+    html_file = os.path.join(os.path.dirname(os.path.abspath(__name__)), 'templates', 'timeslotreminder.html')
     with open(html_file,'r') as f:
         html = f.read()
         f.close()
