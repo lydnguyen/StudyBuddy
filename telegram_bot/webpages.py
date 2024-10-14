@@ -15,6 +15,8 @@ def get_topics_display_by_userid(userid):
 @app.route('/')
 def form():
     html_file = os.path.join(os.path.dirname(os.path.abspath(__name__)), 'templates', 'timeslotreminder.html')
+    if 'telegram_bot' in html_file:
+        html_file = html_file.replace('/telegram_bot','')
     with open(html_file,'r') as f:
         html = f.read()
         f.close()
