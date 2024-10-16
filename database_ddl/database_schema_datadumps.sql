@@ -1,6 +1,6 @@
 create schema accp ;
 -- Insert test data for Participants
-drop table accp.dim_participant cascade;
+--drop table accp.dim_participant cascade;
 CREATE TABLE accp.dim_participant (
   ParticipantID VARCHAR(255) PRIMARY KEY,
   Telegram_chatid BIGINT,
@@ -14,10 +14,12 @@ VALUES
   ('1', 23,'Participant1', 'participant1@example.com', '2023-01-01', '2023-11-23'),
   ('2', 43,'Participant2', 'participant2@example.com', '2023-01-02', '2023-11-23'),
   ('3', 456,'Participant3', 'participant3@example.com', '2023-01-03', '2023-11-23'),
-  ('4', 6261265168,'Lan', 'lan@example.com', '2023-01-03', '2023-11-23'),
+  ('4', 6261265168,'Lan', 'lan@example.com', '2023-01-03', '2023-11-23')
+  ;
 
 -- Insert test data for dim_quiz_multiple
-CREATE TABLE accp.dim_quiz_multiple (
+--drop table accp.dim_quiz_multiple cascade;
+CREATE TABLE  accp.dim_quiz_multiple (
   QuizID INT PRIMARY KEY,
   Quiztopic VARCHAR(255),
   Quizdifficulty INT,
@@ -29,7 +31,26 @@ VALUES
   (2, 'English', 2, 'intermediate'),
   (3, 'Math', 2, 'intermediate'),
   (4, 'Math', 3, 'advanced'),
-  (5, 'AWS Certified Solutions Architect Associate', 1, 'Availablity & Scalability')
+  (5, 'AWS Certified Solutions Architect Associate', 1, 'Availablity & Scalability'),
+  (8941, 'AWS-SAA-C03', 2, 'IAM & AWS CLI'),
+  (1367, 'AWS-SAA-C03', 2, 'EC2'),
+  (630, 'AWS-SAA-C03', 2, 'High Availablity & Scalability'),
+  (9651, 'AWS-SAA-C03', 2, 'RDS + Aurora + ElastiCache'),
+  (589, 'AWS-SAA-C03', 2, 'Route 53'),
+  (7471, 'AWS-SAA-C03', 2, 'S3'),
+  (8942, 'AWS-SAA-C03', 2, 'CloudFront & AWS Global Accelerator'),
+  (8323, 'AWS-SAA-C03', 2, 'AWS Storage Extras'),
+  (2539, 'AWS-SAA-C03', 2, 'Decoupling applications'),
+  (7782, 'AWS-SAA-C03', 2, 'Containers on AWS'),
+  (8216, 'AWS-SAA-C03', 2, 'Serverless Solutions'),
+  (7345, 'AWS-SAA-C03', 2, 'Databases in AWS'),
+  (5010, 'AWS-SAA-C03', 2, 'Data & Analytics'),
+  (1583, 'AWS-SAA-C03', 2, 'Machine Learning'),
+  (723, 'AWS-SAA-C03', 2, 'AWS Monitor & & Audit'),
+  (5218, 'AWS-SAA-C03', 2, 'AWS Security & Encryption'),
+  (3366, 'AWS-SAA-C03', 2, 'Networking VPC'),
+  (8725, 'AWS-SAA-C03', 2, 'Disaster Recovery & & Migration'),
+  (850, 'AWS-SAA-C03', 2, 'Other AWS services')
   ;
 
 -- Insert test data for Questions TODO: add marks
@@ -198,7 +219,7 @@ VALUES
     (10, 9651, 4, '2023-11-08', '2024-11-08'),
     (11, 589, 4, '2023-11-08', '2024-11-08'),
     (12, 7471, 4, '2023-11-08', '2024-11-08'),
-    (13, 8941, 4, '2023-11-08', '2024-11-08'),
+    (13, 8942, 4, '2023-11-08', '2024-11-08'),
     (14, 8323, 4, '2023-11-08', '2024-11-08'),
     (15, 2539, 4, '2023-11-08', '2024-11-08'),
     (16, 7782, 4, '2023-11-08', '2024-11-08'),
@@ -210,5 +231,13 @@ VALUES
     (22, 5218, 4, '2023-11-08', '2024-11-08'),
     (23, 3366, 4, '2023-11-08', '2024-11-08'),
     (24, 8725, 4, '2023-11-08', '2024-11-08'),
-    (25, 850, 4, '2023-11-08', '2024-11-08'),
-    (26, 8430, 4, '2023-11-08', '2024-11-08')
+    (25, 850, 4, '2023-11-08', '2024-11-08');
+
+
+drop table accp.dim_participant cascade;
+drop table accp.dim_question cascade;
+drop table accp.dim_option cascade;
+drop table accp.fact_answer cascade;
+drop table accp.fact_quizoption_selected cascade;
+drop table accp.fact_has_accessright_topic cascade;
+drop table accp.dim_quiz_multiple cascade;
