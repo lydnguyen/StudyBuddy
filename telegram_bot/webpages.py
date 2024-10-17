@@ -2,6 +2,11 @@ from flask import Flask, request, render_template_string, jsonify
 import os
 import json
 from _access_source import GetData
+import logging
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=os.environ.get("LOG_LEVEL", "INFO").upper(),
+)
 
 
 app = Flask(__name__)
@@ -26,7 +31,7 @@ def form():
 def get_topics():
     # Get the chat ID sent from the frontend
     userid = request.form.get('chat-info')
-    print(f"Received userid: {userid}")  # Log the received user id
+    logging.info(f'Retrieve topics for User {userid}')  # Log the received user id
     if userid is None or userid=='':
         userid = '23'
     topics = get_topics_display_by_userid(userid)['quizlevel'].unique().tolist()
