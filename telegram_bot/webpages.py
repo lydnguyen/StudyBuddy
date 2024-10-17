@@ -36,7 +36,6 @@ def get_topics():
     if userid is None or userid=='':
         userid = '23'
     topics = get_topics_display_by_userid(userid)['quizlevel'].unique().tolist()
-    print(f"Topics returned for userid {userid}: {topics}")  # Log the fetched topics
     return jsonify(topics)
 
 @app.route('/submit', methods=['POST'])
@@ -61,8 +60,8 @@ def submit():
 
     user_data['reminders'] = reminders
     del user_data['all_reminders']
-
-    return jsonify({'success': True, 'data':user_data}), 200
+    logging.info(f'Success update for {user_data}')
+    # return jsonify({'success': True, 'data':user_data}), 200
 
 def main():
     app.run(debug=True)
