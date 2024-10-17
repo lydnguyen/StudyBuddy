@@ -309,6 +309,7 @@
                 data: { chat_id: chatId },
                 success: function(response) {
                     console.log("Topics received: ", response); // Add this line to see the response
+                    console.log("ChatID: ", chatId); // Add this line to see the chatid
                     populateTopicCheckboxes(response);
                 },
                 error: function(error) {
