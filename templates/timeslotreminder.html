@@ -306,8 +306,7 @@
             $.ajax({
                 type: 'POST',
                 url: '/get_topics',  // Flask backend route
-                data: JSON.stringify({ chat_id: chatId }),
-                contentType: 'application/json'
+                data: { chat_id: chatId },
                 success: function(response) {
                     console.log("Topics received: ", response); // Add this line to see the response
                     populateTopicCheckboxes(response);
