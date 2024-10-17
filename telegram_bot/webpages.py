@@ -30,10 +30,11 @@ def form():
 @app.route('/get_topics', methods=['POST'])
 def get_topics():
     # Get the chat ID sent from the frontend
-    # chat_id = request.get_json()
-    # userid = chat_id.get('chat_id')
+    chat_id = request.get_json()
+    test = chat_id.get('chat_id')
     userid = request.form.get('chat-info')
     logging.info(f'Retrieve topics for User {userid}')  # Log the received user id
+    logging.info(f'Retrieve topics for User {test}')  # Log the received user id
     if userid is None or userid=='':
         userid = '23'
     topics = get_topics_display_by_userid(userid)['quizlevel'].unique().tolist()
