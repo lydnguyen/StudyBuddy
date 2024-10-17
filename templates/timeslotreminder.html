@@ -413,6 +413,7 @@
 
         // Close functionality
         ConfirmCloseBtn.addEventListener('click', function() {
+            event.preventDefault();  // Prevent form submission and redirection
             const confirmed = confirm("Are you sure you want to confirm and close the window?");
             if (confirmed) {
                 window.close();

@@ -61,8 +61,7 @@ def submit():
     user_data['reminders'] = reminders
     del user_data['all_reminders']
     logging.info(f'Success update for {user_data}')
-    # return jsonify({'success': True, 'data':user_data}), 200
-    return 200
+    return jsonify({'success': True, 'data':user_data}), 200
 
 def main():
     app.run(debug=True)
